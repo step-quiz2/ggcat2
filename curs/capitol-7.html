@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 7 — Polígons | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 7 — Polígons</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 7</span>
+        <h1>Polígons</h1>
+        <p class="chapter-lead">Un <strong>polígon</strong> és una figura plana tancada formada per segments (costats). GeoGebra permet crear polígons lliures amb qualsevol nombre de vèrtexs, i polígons regulars (tots els costats i angles iguals) en una sola comanda.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Polígon lliure
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Polígon lliure: <code>Polígon(A,B,C,...)</code></h2>
+
+        <p>La comanda <code>Polígon</code> crea un polígon tancat donant els vèrtexs en ordre. Pots donar-ne quants vulguis (mínim 3):</p>
+
+        <pre class="code-example">A=(0,0)
+B=(4,0)
+C=(5,3)
+D=(2,4)
+Polígon(A,B,C,D)</pre>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(4,0)
+C=(5,3)
+D=(2,4)
+p=Polygon(A,B,C,D)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>GeoGebra omple el polígon amb un color semitransparent i crea automàticament els segments dels costats. La vista algebraica mostra l'àrea.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Triangle
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Triangle: <code>Polígon(A,B,C)</code></h2>
+
+        <p>Un triangle és un polígon de tres vèrtexs. Pots crear-ne de tot tipus segons la posició dels vèrtexs:</p>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(6,0)
+C=(3,4)
+t=Polygon(A,B,C)"
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>Arrossega els vèrtexs i observa com canvien l'àrea i el perímetre. Intenta crear un triangle equilàter (tots els costats iguals), un isòsceles (dos costats iguals) i un escalè (tots diferentss).</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Polígon regular
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Polígon regular: <code>PolígonRegular(A,B,n)</code></h2>
+
+        <p>Un <strong>polígon regular</strong> té tots els costats iguals i tots els angles interiors iguals. La comanda <code>PolígonRegular(A,B,n)</code> el crea donant dos vèrtexs adjacents i el nombre de costats:</p>
+
+        <pre class="code-example">A=(-2,0)
+B=(2,0)
+PolígonRegular(A,B,6)</pre>
+
+        <p>Un hexàgon regular (6 costats) creat a partir del costat AB:</p>
+
+        <div class="geogebra"
+             data-commands="A=(-2,0)
+B=(2,0)
+hex=Polygon(A,B,6)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>GeoGebra calcula automàticament els vèrtexs restants. Per un hexàgon regular creat sobre un costat de 4 unitats, tots els costats mesuren 4.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Altres polígons regulars
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Quadrat, pentàgon, octàgon...</h2>
+
+        <p>La mateixa comanda funciona per qualsevol nombre de costats. Observa un quadrat (n=4) i un pentàgon (n=5):</p>
+
+        <div class="geogebra"
+             data-commands="A=(-4,1)
+B=(-1,1)
+C=(1,1)
+D=(4,1)
+q=Polygon(A,B,4)
+pent=Polygon(C,D,5)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Com més costats té un polígon regular, més s'assembla a una circumferència. Prova n=20 o n=50 al widget lliure!</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Crea un <strong>hexàgon regular</strong> (polígon de 6 costats). Pots col·locar-lo on vulguis. Prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-goal-id="cap-7-ex"
+             data-height="420">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p><code>Polígon(A,B,C,...)</code> crea un polígon lliure pels vèrtexs donats. <code>PolígonRegular(A,B,n)</code> crea un polígon regular de n costats on AB és un costat. Un hexàgon és n=6, un pentàgon n=5, un quadrat n=4, un triangle equilàter n=3.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-6.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-8.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(7);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>

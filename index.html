@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoCat — GeoGebra al navegador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* La landing no ha de tenir overflow: hidden */
+    html, body { height: auto; overflow: auto; }
+
+    /* ── Hero ────────────────────────────────────────── */
+    .landing {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem 4rem;
+      text-align: center;
+      gap: 2rem;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .hero-logo svg { width: 3rem; height: 3rem; }
+    .hero-logo-name {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+    .hero-logo-name span { color: var(--accent); }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 38ch;
+      line-height: 1.7;
+    }
+
+    /* ── Stats ───────────────────────────────────────── */
+    .stats {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+    }
+    .stat-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-lbl {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── CTA buttons ─────────────────────────────────── */
+    .cta-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cta {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.65rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: filter 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .cta:active { transform: scale(0.97); }
+    .cta-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 2px solid var(--accent);
+    }
+    .cta-primary:hover { filter: brightness(1.15); }
+    .cta-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+    .cta-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    body.light .cta-secondary { color: var(--text); }
+    body.light .cta-secondary:hover { color: var(--accent); }
+
+    /* ── Feature pills ───────────────────────────────── */
+    .features {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 420px;
+    }
+    .feature {
+      font-size: 0.65rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 480px) {
+      .hero-logo-name { font-size: 1.8rem; }
+      .hero-subtitle  { font-size: 0.82rem; }
+      .cta            { font-size: 0.75rem; padding: 0.55rem 1.1rem; }
+      .stat-num       { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Tema: aplicat immediatament per evitar flash -->
+<script>
+  (function() {
+    var saved = null;
+    try { saved = localStorage.getItem('geocat-theme'); } catch(_) {}
+    if (saved !== 'dark') document.body.classList.add('light');
+  })();
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════
+     CAPÇALERA
+     ══════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="logo">
+    <span class="logo-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1.4em" height="1.4em" style="vertical-align:middle">
+        <circle cx="50" cy="22" r="10" fill="#2563eb"/>
+        <line x1="50" y1="32" x2="30" y2="82" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+        <line x1="50" y1="32" x2="70" y2="82" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+        <line x1="26" y1="72" x2="74" y2="72" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span>GeoCat</span>
+  </div>
+
+  <nav class="topbar-nav">
+    <a href="curs/capitol-1.html" class="topbar-nav-link">Capítols</a>
+    <a href="curs/repte-1.html"   class="topbar-nav-link">Reptes</a>
+  </nav>
+
+  <div class="topbar-actions">
+    <button id="btn-theme" class="btn btn-theme" aria-label="Canvia el tema"></button>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════════════════════
+     LANDING
+     ══════════════════════════════════════════════════════ -->
+<div class="landing">
+
+  <!-- Logo + nom -->
+  <div class="hero-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <circle cx="50" cy="22" r="10" fill="#2563eb"/>
+      <line x1="50" y1="32" x2="30" y2="82" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+      <line x1="50" y1="32" x2="70" y2="82" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+      <line x1="26" y1="72" x2="74" y2="72" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <span class="hero-logo-name">Geo<span>Cat</span></span>
+  </div>
+
+  <!-- Subtítol -->
+  <p class="hero-subtitle">
+    Aprèn geometria interactiva amb GeoGebra.<br>
+    Capítols guiats i reptes amb validació<br>
+    automàtica — tot des del navegador.
+  </p>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num">10</span>
+      <span class="stat-lbl">Capítols</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">10/30</span>
+      <span class="stat-lbl">Reptes</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">0</span>
+      <span class="stat-lbl">Instal·lació</span>
+    </div>
+  </div>
+
+  <!-- CTAs -->
+  <div class="cta-group">
+    <a href="curs/capitol-1.html" class="cta cta-primary">
+      📐 Comença el curs
+    </a>
+  </div>
+
+  <!-- Feature pills -->
+  <div class="features">
+    <span class="feature">✓ En català</span>
+    <span class="feature">✓ Progrés guardat localment</span>
+    <span class="feature">✓ Feedback automàtic ✓ / ✗</span>
+    <span class="feature">✓ Sense instal·lació ni comptes</span>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     Scripts
+     ══════════════════════════════════════════════════════ -->
+<script>
+  // ── Botó de tema ──────────────────────────────────────
+  (function() {
+    var btn = document.getElementById('btn-theme');
+    if (!btn) return;
+
+    function getTheme() {
+      return document.body.classList.contains('light') ? 'light' : 'dark';
+    }
+    function applyTheme(t) {
+      if (t === 'light') {
+        document.body.classList.add('light');
+        document.body.classList.remove('dark');
+      } else {
+        document.body.classList.remove('light');
+        document.body.classList.add('dark');
+      }
+      btn.textContent = (t === 'light') ? '🌙' : '☀️';
+      try { localStorage.setItem('geocat-theme', t); } catch(_) {}
+    }
+
+    // Inicialitza icona
+    applyTheme(getTheme());
+
+    btn.addEventListener('click', function() {
+      applyTheme(getTheme() === 'light' ? 'dark' : 'light');
+    });
+  })();
+</script>
+
+</body>
+</html>

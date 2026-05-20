@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor · GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+
+  <style>
+    /* ── Edit toolbar ─────────────────────────────────────── */
+    .edit-bar {
+      position: sticky;
+      top: 38px;
+      z-index: 95;
+      height: 36px;
+      background: #18181b;
+      color: #e4e4e7;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+    }
+    .edit-bar-tag {
+      background: #fbbf24;
+      color: #18181b;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .edit-bar select,
+    .edit-bar button {
+      font-family: inherit;
+      font-size: inherit;
+      background: #27272a;
+      color: #e4e4e7;
+      border: 1px solid #3f3f46;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .edit-bar select:hover,
+    .edit-bar button:hover { background: #3f3f46; }
+    .edit-bar .primary {
+      background: #2563eb;
+      border-color: #2563eb;
+      font-weight: 700;
+    }
+    .edit-bar .primary:hover { background: #1d4ed8; }
+    .edit-bar .primary:disabled {
+      background: #3f3f46;
+      border-color: #3f3f46;
+      color: #71717a;
+      cursor: default;
+    }
+    .edit-bar .spacer { flex: 1; }
+
+    .edit-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #a1a1aa;
+    }
+    .edit-progress-bar {
+      width: 140px;
+      height: 6px;
+      background: #3f3f46;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    .edit-progress-bar > div {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, #4ade80, #2563eb);
+      width: 0%;
+      transition: width 0.25s;
+    }
+    .edit-progress-num strong { color: #fafafa; font-weight: 700; }
+    .edit-progress-mod { color: #fb923c; }
+
+    /* Layout: header (38px) + edit-bar (36px) = 74px */
+    .curs-layout { min-height: calc(100vh - 74px); }
+    .curs-sidebar { top: 74px; height: calc(100vh - 74px); }
+
+    .curs-nav a.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Sidebar progress badges */
+    .sb-progress {
+      float: right;
+      font-size: 0.6rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--surface);
+      margin-left: 6px;
+    }
+    .sb-progress.done { background: #dcfce7; color: #15803d; }
+    .sb-progress.has-mods { background: #fff7ed; color: #c2410c; }
+
+    /* ── Editable blocks ──────────────────────────────────── */
+    .eb {
+      position: relative;
+      outline: 2px dashed transparent;
+      outline-offset: 4px;
+      border-radius: 3px;
+      transition: outline-color 0.15s, outline-style 0.15s;
+    }
+    .eb[data-state="pending"]  { outline-color: #fbbf24; }
+    .eb[data-state="approved"] { outline-color: #4ade80; outline-style: solid; }
+    .eb[data-state="modified"] { outline-color: #fb923c; outline-style: solid; }
+    .eb.editing {
+      outline: 2px solid #2563eb !important;
+      outline-offset: 6px;
+    }
+
+    /* Action buttons in right gutter */
+    .eb-actions {
+      position: absolute;
+      top: -2px;
+      left: 100%;
+      margin-left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s;
+      z-index: 30;
+    }
+    .eb:hover .eb-actions,
+    .eb.editing .eb-actions { opacity: 1; pointer-events: auto; }
+    .eb-btn {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.08s;
+    }
+    .eb-btn:hover { transform: scale(1.12); }
+    .eb-btn-ok   { color: #15803d; }
+    .eb-btn-ok:hover   { background: #f0fdf4; border-color: #4ade80; }
+    .eb-btn-edit { color: #2563eb; }
+    .eb-btn-edit:hover { background: #eff6ff; border-color: #93c5fd; }
+    .eb-btn-undo { color: #b91c1c; }
+    .eb-btn-undo:hover { background: #fef2f2; border-color: #fca5a5; }
+
+    .eb[data-state="approved"] .eb-btn-ok { background: #dcfce7; border-color: #4ade80; }
+    .eb[data-state="modified"] .eb-btn-ok { background: #fff7ed; border-color: #fb923c; color: #c2410c; }
+    .eb[data-state="pending"]  .eb-btn-undo,
+    .eb[data-state="approved"] .eb-btn-undo { display: none; }
+
+    @media (max-width: 1180px) {
+      .eb-actions {
+        position: static;
+        margin-left: 0;
+        margin-top: 6px;
+        flex-direction: row;
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    /* ── Edit panel (replaces block while editing) ────────── */
+    .eb-edit {
+      display: none;
+      border: 2px solid #2563eb;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+      overflow: hidden;
+    }
+    .eb.editing .eb-edit { display: block; }
+    .eb.editing > [data-eb-target] { display: none; }
+
+    .eb-edit-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #eff6ff;
+      padding: 5px 12px;
+      font-size: 0.62rem;
+      color: #1e40af;
+      border-bottom: 1px solid #bfdbfe;
+    }
+    .eb-edit-head code {
+      background: #dbeafe;
+      padding: 0 5px;
+      border-radius: 2px;
+    }
+    .eb-edit textarea {
+      display: block;
+      width: 100%;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      padding: 10px 12px;
+      border: none;
+      outline: none;
+      resize: vertical;
+      min-height: 56px;
+      color: var(--text);
+      box-sizing: border-box;
+    }
+    .eb-edit-foot {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      padding: 6px 12px;
+      background: #eff6ff;
+      border-top: 1px solid #bfdbfe;
+      font-size: 0.62rem;
+      color: #1e40af;
+    }
+    .eb-edit-foot .hint { flex: 1; }
+    .eb-edit-foot kbd {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      border: 1px solid #93c5fd;
+    }
+    .eb-edit-foot button {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+    }
+    .eb-edit-foot .save-btn {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+      font-weight: 700;
+    }
+    .eb-edit-foot .save-btn:hover { background: #1d4ed8; }
+
+    /* ── GeoGebra placeholders ───────────────────────────── */
+    .ggb-ph {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 16px;
+      margin: 1rem 0;
+      color: var(--muted);
+    }
+    .ggb-ph-icon { font-size: 1.8rem; opacity: 0.4; }
+    .ggb-ph-title {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ggb-ph-tag {
+      font-size: 0.58rem;
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .ggb-ph-tag.ro { background: rgba(37,99,235,0.1); color: var(--accent); }
+    .ggb-ph-tag.rw { background: rgba(34,197,94,0.12); color: #15803d; }
+    .ggb-ph-tag.goal { background: rgba(251,146,60,0.15); color: #c2410c; }
+    .ggb-ph-info {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      opacity: 0.7;
+    }
+
+    /* ── Loading / errors ─────────────────────────────────── */
+    .edit-stage {
+      padding: 3rem 1rem;
+      text-align: center;
+      font-family: var(--mono);
+      color: var(--muted);
+    }
+    .edit-stage .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: -3px;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .edit-error {
+      max-width: 540px;
+      margin: 2rem auto;
+      padding: 14px 18px;
+      background: #fef2f2;
+      border-left: 3px solid #dc2626;
+      border-radius: 4px;
+      color: #991b1b;
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      line-height: 1.6;
+    }
+    .edit-error code {
+      background: #fee2e2;
+      padding: 0 5px;
+      border-radius: 2px;
+    }
+
+    /* ── Diff modal ───────────────────────────────────────── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15,23,42,0.55);
+      align-items: flex-start;
+      justify-content: center;
+      padding: 4vh 16px;
+      animation: fadeIn 0.15s;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal.open { display: flex; }
+    .modal-box {
+      background: white;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 820px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-head h2 { font-size: 0.95rem; font-family: var(--mono); }
+    .modal-head button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-foot {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .modal-foot button {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 6px 14px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+    }
+    .modal-foot button.primary {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+      font-weight: 700;
+    }
+    .modal-foot button.primary:hover { background: #1d4ed8; }
+
+    .diff-item {
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+    }
+    .diff-item-head {
+      background: var(--surface);
+      padding: 4px 10px;
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+    .diff-item-old, .diff-item-new {
+      padding: 8px 10px 8px 26px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.55;
+      position: relative;
+    }
+    .diff-item-old::before,
+    .diff-item-new::before {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      font-weight: 700;
+      opacity: 0.6;
+    }
+    .diff-item-old { background: #fef2f2; color: #991b1b; border-bottom: 1px solid var(--border); }
+    .diff-item-old::before { content: '−'; }
+    .diff-item-new { background: #f0fdf4; color: #15803d; }
+    .diff-item-new::before { content: '+'; }
+    .diff-empty {
+      text-align: center;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 2rem;
+    }
+
+    /* ── Toast ────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translate(-50%, 12px);
+      background: #18181b;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      opacity: 0;
+      transition: all 0.2s;
+      pointer-events: none;
+      z-index: 1100;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  </style>
+</head>
+
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga el sidebar">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="#" class="active">Capítols</a>
+    <a class="disabled" title="L'editor només actua sobre Capítols">Reptes</a>
+  </nav>
+  <span class="curs-header-title"></span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="edit-bar">
+  <span class="edit-bar-tag">✎ EDITOR</span>
+  <select id="chapter-select" title="Tria capítol"></select>
+  <div class="edit-progress">
+    <div class="edit-progress-bar"><div id="progress-bar"></div></div>
+    <span class="edit-progress-num">
+      <strong id="progress-done">0</strong>/<span id="progress-total">0</span><span id="progress-mod" class="edit-progress-mod"></span>
+    </span>
+  </div>
+  <span class="spacer"></span>
+  <button id="btn-reset" title="Esborra els canvis locals d'aquest capítol">⌫ Reset</button>
+  <button id="btn-download" class="primary" disabled>⬇ Descarrega</button>
+</div>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay"></div>
+  <nav id="sidebar" class="curs-sidebar">
+    <div id="sidebar-nav"></div>
+  </nav>
+  <main class="curs-content">
+    <div id="stage"><div class="edit-stage"><span class="spinner"></span>Inicialitzant…</div></div>
+  </main>
+</div>
+
+<div class="modal" id="diff-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="diff-title">Canvis pendents</h2>
+      <button id="diff-x" aria-label="Tanca">✕</button>
+    </div>
+    <div class="modal-body" id="diff-body"></div>
+    <div class="modal-foot">
+      <button id="diff-cancel">Cancel·la</button>
+      <button id="diff-go" class="primary">Confirma i descarrega</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════════════════════
+   GeoCat · edit.html — Editor PRO de capítols
+
+   ARQUITECTURA:
+   • L'string crua del HTML font és la font de veritat.
+   • Tokenitzem el font per trobar les posicions [start,end] de
+     cada element editable (h1, h2, p, pre.code-example,
+     div.exercise-enunciat) dins de .chapter-content-inner.
+   • Renderitzem una còpia parsejada del HTML per a visualitzar.
+   • A la descàrrega, splicing per posició sobre l'string original:
+     només es substitueix el contingut dels blocs modificats.
+     => Cap altre byte del fitxer es toca. Diffs de git nets.
+═══════════════════════════════════════════════════════════════ */
+
+const CAPITOLS = [
+  { num: 1,  titol: 'Benvingut a GeoGebra' },
+  { num: 2,  titol: 'Rectes i segments' },
+  { num: 3,  titol: 'Circumferències' },
+  { num: 4,  titol: 'Mesures' },
+  { num: 5,  titol: 'Construccions clàssiques I' },
+  { num: 6,  titol: 'Construccions clàssiques II' },
+  { num: 7,  titol: 'Polígons' },
+  { num: 8,  titol: 'Transformacions' },
+  { num: 9,  titol: 'Funcions i gràfiques' },
+  { num: 10, titol: 'Lliscadors i constr. dinàmiques' },
+];
+
+const LS_KEY = (n) => `geocat_editor:capitol-${n}`;
+const EDITABLE_SEL = 'h1, h2, p, pre.code-example, .exercise-enunciat';
+
+// ── State ────────────────────────────────────────────────
+let currentNum = 1;
+let originalSource = '';
+let blocks = [];        // [{tag, srcStart, srcEnd, original, current, reviewed, el, ebEl, taEl}]
+let activeBlock = null;
+
+// ════════ Source tokenizer ════════
+// Find positions of all editable elements in source order,
+// restricted to inside .chapter-content-inner.
+function tokenizeSource(src) {
+  const openMatch = src.match(/<div\s+class="chapter-content-inner"\s*>/);
+  if (!openMatch) return null;
+  const innerStart = openMatch.index + openMatch[0].length;
+  const mainCloseIdx = src.indexOf('</main>', innerStart);
+  if (mainCloseIdx < 0) return null;
+  const innerEnd = src.lastIndexOf('</div>', mainCloseIdx);
+
+  // chapter-nav ranges to exclude
+  const navRanges = [];
+  const navRe = /<nav\b[^>]*class="[^"]*\bchapter-nav\b[^"]*"[^>]*>/g;
+  let nm; navRe.lastIndex = innerStart;
+  while ((nm = navRe.exec(src)) !== null) {
+    if (nm.index >= innerEnd) break;
+    const ce = src.indexOf('</nav>', nm.index + nm[0].length);
+    if (ce > 0 && ce < innerEnd) navRanges.push([nm.index, ce + 6]);
+  }
+  const inNav = (p) => navRanges.some(([s, e]) => p >= s && p < e);
+
+  const patterns = [
+    { tag: 'h1', open: /<h1\b[^>]*>/g, close: '</h1>', cl: 5 },
+    { tag: 'h2', open: /<h2\b[^>]*>/g, close: '</h2>', cl: 5 },
+    { tag: 'p',  open: /<p\b[^>]*>/g,  close: '</p>',  cl: 4 },
+    { tag: 'pre.code-example',
+      open: /<pre\b[^>]*\bclass="[^"]*\bcode-example\b[^"]*"[^>]*>/g,
+      close: '</pre>', cl: 6 },
+    { tag: 'div.exercise-enunciat',
+      open: /<div\b[^>]*\bclass="[^"]*\bexercise-enunciat\b[^"]*"[^>]*>/g,
+      close: '</div>', cl: 6 },
+  ];
+
+  const tokens = [];
+  for (const p of patterns) {
+    p.open.lastIndex = innerStart;
+    let m;
+    while ((m = p.open.exec(src)) !== null) {
+      if (m.index >= innerEnd) break;
+      if (inNav(m.index)) continue;
+      const cStart = m.index + m[0].length;
+      const cEnd = src.indexOf(p.close, cStart);
+      if (cEnd < 0 || cEnd >= innerEnd) continue;
+      tokens.push({
+        tag: p.tag,
+        srcStart: cStart,
+        srcEnd: cEnd,
+        original: src.substring(cStart, cEnd),
+      });
+    }
+  }
+  tokens.sort((a, b) => a.srcStart - b.srcStart);
+  return tokens;
+}
+
+// ════════ Persistence ════════
+function loadStateFor(num) {
+  try {
+    const raw = localStorage.getItem(LS_KEY(num));
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function saveCurrentState() {
+  try {
+    const items = {};
+    let any = false;
+    blocks.forEach((b, i) => {
+      const changed = b.current !== b.original;
+      if (b.reviewed || changed) {
+        items[i] = changed ? { c: b.current, r: b.reviewed ? 1 : 0 } : { r: 1 };
+        any = true;
+      }
+    });
+    if (any) {
+      localStorage.setItem(LS_KEY(currentNum), JSON.stringify({
+        n: blocks.length, t: Date.now(), items,
+      }));
+    } else {
+      localStorage.removeItem(LS_KEY(currentNum));
+    }
+  } catch (e) { console.warn('saveCurrentState:', e); }
+}
+
+function clearCurrentState() {
+  try { localStorage.removeItem(LS_KEY(currentNum)); } catch {}
+}
+
+// ════════ Sidebar ════════
+function renderSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  let html = '<div class="sidebar-section-title">Capítols</div><ul class="sidebar-list">';
+  for (const c of CAPITOLS) {
+    const st = loadStateFor(c.num);
+    let badge = '';
+    if (st && st.items) {
+      const reviewed = Object.values(st.items).filter(x => x.r).length;
+      const mods = Object.values(st.items).filter(x => x.c !== undefined).length;
+      let cls = '';
+      if (st.n && reviewed === st.n) cls = ' done';
+      else if (mods > 0) cls = ' has-mods';
+      const label = mods > 0
+        ? `${reviewed}/${st.n} · ✎${mods}`
+        : `${reviewed}/${st.n}`;
+      badge = `<span class="sb-progress${cls}">${label}</span>`;
+    }
+    const active = c.num === currentNum ? ' active' : '';
+    html += `<li class="sidebar-item${active}">
+      <a href="#" data-num="${c.num}">${c.num}. ${c.titol}${badge}</a>
+    </li>`;
+  }
+  html += '</ul>';
+  nav.innerHTML = html;
+  nav.querySelectorAll('a[data-num]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      loadChapter(parseInt(a.dataset.num, 10));
+    });
+  });
+}
+
+// ════════ Progress ════════
+function refreshProgress() {
+  const total = blocks.length;
+  const done = blocks.filter(b => b.reviewed).length;
+  const mods = blocks.filter(b => b.current !== b.original).length;
+  document.getElementById('progress-bar').style.width =
+    (total === 0 ? 0 : (done / total) * 100) + '%';
+  document.getElementById('progress-done').textContent = done;
+  document.getElementById('progress-total').textContent = total;
+  document.getElementById('progress-mod').textContent =
+    mods > 0 ? ` · ✎${mods}` : '';
+  document.getElementById('btn-download').disabled = total === 0;
+}
+
+// ════════ Block state ════════
+function deriveState(b) {
+  if (b.current !== b.original) return 'modified';
+  if (b.reviewed) return 'approved';
+  return 'pending';
+}
+
+function applyVisualState(b) {
+  b.ebEl.dataset.state = deriveState(b);
+}
+
+// ════════ Block actions ════════
+function toggleApprove(b) {
+  b.reviewed = !b.reviewed;
+  applyVisualState(b);
+  saveCurrentState();
+  refreshProgress();
+  renderSidebar();
+}
+
+function startEdit(b) {
+  if (activeBlock && activeBlock !== b) cancelEdit(activeBlock);
+  activeBlock = b;
+  b.ebEl.classList.add('editing');
+  const ta = b.taEl;
+  ta.value = b.current;
+  autoSizeTextarea(ta);
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+  b.ebEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function commitEdit(b) {
+  b.current = b.taEl.value;
+  b.el.innerHTML = b.current;
+  b.reviewed = true;   // saving counts as reviewing
+  b.ebEl.classList.remove('editing');
+  if (activeBlock === b) activeBlock = null;
+  applyVisualState(b);
+  saveCurrentState();
+  refreshProgress();
+  renderSidebar();
+}
+
+function cancelEdit(b) {
+  b.ebEl.classList.remove('editing');
+  if (activeBlock === b) activeBlock = null;
+}
+
+function undo(b) {
+  if (b.current !== b.original) {
+    if (!confirm('Restaurar el text original d\'aquest bloc?')) return;
+  }
+  b.current = b.original;
+  b.reviewed = false;
+  b.el.innerHTML = b.original;
+  applyVisualState(b);
+  saveCurrentState();
+  refreshProgress();
+  renderSidebar();
+  toast('Restaurat');
+}
+
+function navigateEditing(b, dir) {
+  const idx = blocks.indexOf(b);
+  commitEdit(b);
+  const next = blocks[idx + dir];
+  if (next) startEdit(next);
+}
+
+function autoSizeTextarea(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.max(56, ta.scrollHeight + 2) + 'px';
+}
+
+// ════════ Block wrapping ════════
+function wrapBlock(b, idx) {
+  const el = b.el;
+  el.setAttribute('data-eb-target', '');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'eb';
+  wrap.dataset.idx = String(idx);
+
+  const actions = document.createElement('div');
+  actions.className = 'eb-actions';
+  actions.innerHTML = `
+    <button class="eb-btn eb-btn-ok"   data-act="ok"   title="Marca com a revisat (toggle)">✓</button>
+    <button class="eb-btn eb-btn-edit" data-act="edit" title="Edita el text">✎</button>
+    <button class="eb-btn eb-btn-undo" data-act="undo" title="Restaura l'original">↺</button>
+  `;
+
+  const edit = document.createElement('div');
+  edit.className = 'eb-edit';
+  edit.innerHTML = `
+    <div class="eb-edit-head">
+      <span><code>&lt;${b.tag}&gt;</code> · bloc ${idx + 1} de ${blocks.length}</span>
+      <span data-charcount>${b.current.length} car.</span>
+    </div>
+    <textarea spellcheck="true" lang="ca"></textarea>
+    <div class="eb-edit-foot">
+      <span class="hint">
+        <kbd>Ctrl</kbd>+<kbd>↵</kbd> desa ·
+        <kbd>Esc</kbd> cancel·la ·
+        <kbd>Tab</kbd> següent
+      </span>
+      <button data-act="cancel">Cancel·la</button>
+      <button data-act="save" class="save-btn">Desa</button>
+    </div>
+  `;
+
+  el.parentNode.insertBefore(wrap, el);
+  wrap.appendChild(el);
+  wrap.appendChild(actions);
+  wrap.appendChild(edit);
+
+  // Apply current content if differs from original (restored from localStorage)
+  if (b.current !== b.original) el.innerHTML = b.current;
+
+  b.ebEl = wrap;
+  b.taEl = edit.querySelector('textarea');
+  applyVisualState(b);
+
+  // Wiring
+  actions.addEventListener('click', e => {
+    const act = e.target.dataset.act;
+    if (act === 'ok')   toggleApprove(b);
+    if (act === 'edit') startEdit(b);
+    if (act === 'undo') undo(b);
+  });
+  edit.querySelector('[data-act="save"]')  .addEventListener('click', () => commitEdit(b));
+  edit.querySelector('[data-act="cancel"]').addEventListener('click', () => cancelEdit(b));
+
+  b.taEl.addEventListener('input', () => {
+    autoSizeTextarea(b.taEl);
+    edit.querySelector('[data-charcount]').textContent = b.taEl.value.length + ' car.';
+  });
+
+  b.taEl.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault(); commitEdit(b);
+    } else if (e.key === 'Escape') {
+      e.preventDefault(); cancelEdit(b);
+    } else if (e.key === 'Tab') {
+      e.preventDefault(); navigateEditing(b, e.shiftKey ? -1 : 1);
+    }
+  });
+}
+
+// ════════ Chapter loading ════════
+async function loadChapter(num) {
+  if (activeBlock) cancelEdit(activeBlock);
+  currentNum = num;
+  document.getElementById('chapter-select').value = String(num);
+  const stage = document.getElementById('stage');
+  stage.innerHTML = `<div class="edit-stage"><span class="spinner"></span>Carregant capitol-${num}.html…</div>`;
+  blocks = [];
+
+  let source;
+  try {
+    const r = await fetch(`capitol-${num}.html`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    source = await r.text();
+  } catch (e) {
+    stage.innerHTML = `<div class="edit-error">
+      ⚠ No s'ha pogut carregar <code>capitol-${num}.html</code>: ${e.message}
+      <br><br>L'editor només funciona des d'un servidor HTTP, no des de <code>file://</code>.
+      <br>Executa: <code>python3 -m http.server 8000</code> dins de la carpeta <code>curs/</code>
+      i obre <code>http://localhost:8000/edit.html</code>.
+    </div>`;
+    return;
+  }
+  originalSource = source;
+  const chapterTitle = (CAPITOLS.find(c => c.num === num) || {}).titol || '';
+  document.title = `Edita ${num}. ${chapterTitle} · GeoCat`;
+  document.querySelector('.curs-header-title').textContent = chapterTitle;
+
+  // Tokenize source
+  const tokens = tokenizeSource(source);
+  if (!tokens) {
+    stage.innerHTML = `<div class="edit-error">⚠ No s'ha trobat <code>.chapter-content-inner</code> al fitxer.</div>`;
+    return;
+  }
+
+  // Parse for visual rendering
+  const doc = new DOMParser().parseFromString(source, 'text/html');
+  const inner = doc.querySelector('.chapter-content-inner');
+
+  // Replace GeoGebra widgets with visual placeholders
+  inner.querySelectorAll('.geogebra').forEach(g => {
+    const h = parseInt(g.getAttribute('data-height') || '420', 10);
+    const ro = g.getAttribute('data-readonly') === 'true';
+    const goal = g.getAttribute('data-goal-id') || '';
+    const cmds = (g.getAttribute('data-commands') || '').trim();
+    const nCmds = cmds ? cmds.split('\n').filter(s => s.trim()).length : 0;
+    const ph = document.createElement('div');
+    ph.className = 'ggb-ph';
+    ph.style.minHeight = Math.round(h * 0.45) + 'px';
+    ph.innerHTML = `
+      <div class="ggb-ph-icon">📐</div>
+      <div class="ggb-ph-title">
+        Widget GeoGebra
+        <span class="ggb-ph-tag ${ro ? 'ro' : 'rw'}">${ro ? 'lectura' : 'interactiu'}</span>
+        ${goal ? `<span class="ggb-ph-tag goal">${goal}</span>` : ''}
+      </div>
+      <div class="ggb-ph-info">${nCmds ? nCmds + ' comandes · ' : ''}alçada ${h}px</div>
+    `;
+    g.parentNode.replaceChild(ph, g);
+  });
+
+  // Mount the parsed DOM
+  stage.innerHTML = '';
+  const root = document.createElement('div');
+  root.className = 'chapter-content-inner';
+  root.innerHTML = inner.innerHTML;
+  stage.appendChild(root);
+
+  // Query editables in the mounted DOM
+  const domEls = Array.from(root.querySelectorAll(EDITABLE_SEL))
+    .filter(el => !el.closest('.chapter-nav'));
+
+  if (domEls.length !== tokens.length) {
+    stage.innerHTML = `<div class="edit-error">
+      ⚠ Discrepància entre el tokenitzador del font (${tokens.length} blocs)
+      i el parser del DOM (${domEls.length} blocs). L'editor no pot operar
+      de manera segura sobre aquest fitxer; revisa la sintaxi HTML del capítol.
+    </div>`;
+    return;
+  }
+
+  // Load persisted state
+  const persisted = loadStateFor(num);
+  const items = (persisted && persisted.n === tokens.length && persisted.items) || {};
+
+  blocks = tokens.map((t, i) => {
+    const saved = items[i] || {};
+    return {
+      tag: t.tag,
+      srcStart: t.srcStart,
+      srcEnd: t.srcEnd,
+      original: t.original,
+      current: saved.c !== undefined ? saved.c : t.original,
+      reviewed: !!saved.r,
+      el: domEls[i],
+      ebEl: null,
+      taEl: null,
+    };
+  });
+
+  blocks.forEach((b, i) => wrapBlock(b, i));
+  refreshProgress();
+  renderSidebar();
+}
+
+// ════════ Download (source-level surgical splicing) ════════
+function buildModifiedSource() {
+  const mods = blocks
+    .filter(b => b.current !== b.original)
+    .slice()
+    .sort((a, b) => b.srcStart - a.srcStart);   // right-to-left preserves offsets
+
+  if (mods.length === 0) return originalSource;
+
+  let out = originalSource;
+  for (const b of mods) {
+    out = out.substring(0, b.srcStart) + b.current + out.substring(b.srcEnd);
+  }
+  return out;
+}
+
+function showDiff() {
+  const mods = blocks.filter(b => b.current !== b.original);
+  document.getElementById('diff-title').textContent =
+    mods.length === 0 ? 'Sense canvis'
+                       : `${mods.length} ${mods.length === 1 ? 'canvi' : 'canvis'}`;
+  const body = document.getElementById('diff-body');
+  if (mods.length === 0) {
+    body.innerHTML = `<div class="diff-empty">
+      No s'ha modificat cap bloc.<br>
+      Si descarregues ara, obtindràs el fitxer original sense canvis.
+    </div>`;
+  } else {
+    body.innerHTML = mods.map(b => {
+      const idx = blocks.indexOf(b) + 1;
+      return `<div class="diff-item">
+        <div class="diff-item-head">Bloc ${idx} · &lt;${b.tag}&gt;</div>
+        <div class="diff-item-old">${escapeHtml(b.original)}</div>
+        <div class="diff-item-new">${escapeHtml(b.current)}</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('diff-modal').classList.add('open');
+}
+
+function doDownload() {
+  const out = buildModifiedSource();
+  const blob = new Blob([out], { type: 'text/html; charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `capitol-${currentNum}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  document.getElementById('diff-modal').classList.remove('open');
+  const mods = blocks.filter(b => b.current !== b.original).length;
+  toast(`✓ Descarregat capitol-${currentNum}.html${mods > 0 ? ` (${mods} canvi${mods === 1 ? '' : 's'})` : ' (sense canvis)'}`);
+}
+
+// ════════ Helpers ════════
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+function injectLogo() {
+  document.querySelectorAll('.logo-icon').forEach(el => {
+    if (!el.innerHTML.trim()) {
+      el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1.4em" height="1.4em" style="vertical-align:middle"><circle cx="50" cy="22" r="10" fill="#2563eb"/><line x1="50" y1="32" x2="30" y2="82" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/><line x1="50" y1="32" x2="70" y2="82" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/><line x1="26" y1="72" x2="74" y2="72" stroke="#93c5fd" stroke-width="4" stroke-linecap="round"/></svg>';
+    }
+  });
+}
+
+function initSidebarToggle() {
+  const btn = document.getElementById('sidebar-toggle');
+  const sb  = document.getElementById('sidebar');
+  const ov  = document.getElementById('sidebar-overlay');
+  btn.addEventListener('click', () => {
+    sb.classList.toggle('open');
+    ov && ov.classList.toggle('visible');
+  });
+  ov && ov.addEventListener('click', () => {
+    sb.classList.remove('open');
+    ov.classList.remove('visible');
+  });
+}
+
+// ════════ Init ════════
+function init() {
+  injectLogo();
+  initSidebarToggle();
+
+  const sel = document.getElementById('chapter-select');
+  sel.innerHTML = CAPITOLS.map(c =>
+    `<option value="${c.num}">${c.num} — ${c.titol}</option>`).join('');
+  sel.addEventListener('change', e => loadChapter(parseInt(e.target.value, 10)));
+
+  document.getElementById('btn-download').addEventListener('click', showDiff);
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    if (!confirm(`Esborrar tots els canvis del capítol ${currentNum}?`)) return;
+    clearCurrentState();
+    loadChapter(currentNum);
+    toast('Estat netejat');
+  });
+  document.getElementById('diff-go').addEventListener('click', doDownload);
+  document.getElementById('diff-cancel').addEventListener('click', () =>
+    document.getElementById('diff-modal').classList.remove('open'));
+  document.getElementById('diff-x').addEventListener('click', () =>
+    document.getElementById('diff-modal').classList.remove('open'));
+
+  // Esc closes the modal when no textarea is focused
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !(document.activeElement instanceof HTMLTextAreaElement)) {
+      document.getElementById('diff-modal').classList.remove('open');
+    }
+  });
+
+  loadChapter(1);
+}
+
+init();
+</script>
+</body>
+</html>

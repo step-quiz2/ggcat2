@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 6 — Construccions clàssiques II | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 6 — Construccions clàssiques II</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 6</span>
+        <h1>Construccions clàssiques II</h1>
+        <p class="chapter-lead">Continuem amb les grans construccions de la geometria euclidiana: la <strong>recta paral·lela</strong>, el <strong>cercle inscrit</strong> i el <strong>cercle circumscrit</strong> d'un triangle. Cada una d'elles encapsula propietats profundes de la geometria.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Recta paral·lela
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Recta paral·lela: <code>Paral·lela(f,A)</code></h2>
+
+        <p>Dues rectes són <strong>paral·leles</strong> si mai es tallen (a la geometria euclidiana). La comanda <code>Paral·lela(f,A)</code> crea la recta que passa per A i és paral·lela a f:</p>
+
+        <pre class="code-example">f=Recta((0,0),(4,2))
+P=(1,3)
+Paral·lela(f,P)</pre>
+
+        <div class="geogebra"
+             data-commands="f=Line((0,0),(4,2))
+P=(1,3)
+g=Parallel(f,P)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>Les dues rectes mai s'intersecten. Si arrossegues P, la recta g es desplaça mantenint sempre la mateixa direcció que f. La distància entre elles canvia, però la paral·lelisme es conserva.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Cercle circumscrit
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Cercle circumscrit: <code>CercleCircumscrit(p)</code></h2>
+
+        <p>El <strong>cercle circumscrit</strong> d'un polígon (generalment un triangle) és la circumferència que passa per tots els seus vèrtexs. El seu centre és la intersecció de les mediatrius:</p>
+
+        <pre class="code-example">A=(0,4)
+B=(-3,0)
+C=(3,0)
+p=Polígon(A,B,C)
+CercleCircumscrit(p)</pre>
+
+        <div class="geogebra"
+             data-commands="A=(0,4)
+B=(-3,0)
+C=(3,0)
+p=Polygon(A,B,C)
+cc=Circle(A,B,C)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>La circumferència toca els tres vèrtexs del triangle exactament. El radi del cercle circumscrit s'anomena <em>circumradi</em>.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Cercle inscrit
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Cercle inscrit: <code>CercleInscrit(p)</code></h2>
+
+        <p>El <strong>cercle inscrit</strong> és la circumferència més gran que cap dins del triangle i és tangent als tres costats. El seu centre és la intersecció de les bisectrius dels angles:</p>
+
+        <div class="geogebra"
+             data-commands="A=(0,5)
+B=(-4,0)
+C=(4,0)
+p=Polygon(A,B,C)
+ci=Incircle(A,B,C)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>El cercle inscrit toca els tres costats del triangle (és tangent a ells). El seu centre s'anomena <em>incentre</em>. Arrossega els vèrtexs i observa com s'adapta a la nova forma del triangle.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Comparació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Circumscrit vs. inscrit</h2>
+
+        <p>Observa els dos cercles alhora — el circumscrit sempre és més gran que l'inscrit per a qualsevol triangle:</p>
+
+        <div class="geogebra"
+             data-commands="A=(0,5)
+B=(-4,0)
+C=(4,0)
+p=Polygon(A,B,C)
+ci=Incircle(A,B,C)
+cc=Circle(A,B,C)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Tens la recta <strong>f</strong> i el punt <strong>P=(0,3)</strong> ja construïts. Crea una recta <strong>paral·lela a f</strong> que passi per P. Prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-commands="f=Line((0,0),(3,1))
+P=(0,3)"
+             data-fixed="f,P"
+             data-goal-id="cap-6-ex"
+             data-height="420">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p>Tres construccions importants: <code>Paral·lela(f,A)</code> crea la recta per A paral·lela a f; <code>CercleCircumscrit(p)</code> dona la circumferència que passa pels vèrtexs del polígon; <code>CercleInscrit(p)</code> dona la circumferència tangent als costats del triangle. El cercle inscrit toca els costats; el circumscrit toca els vèrtexs.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-5.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-7.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(6);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>

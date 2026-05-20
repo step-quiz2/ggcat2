@@ -1,0 +1,146 @@
+/* ════════════════════════════════════════════════════════
+   style.css — GeoCat (landing)
+   Conté només el que index.html necessita: variables de tema,
+   topbar i botó de canvi de tema. La resta d'estils del curs
+   viuen a curs/curs.css.
+════════════════════════════════════════════════════════ */
+
+:root {
+  --bg:         #000000;
+  --surface:    #141414;
+  --border:     #2a2a2a;
+  --text:       #ddddd8;
+  --muted:      #8a8a85;
+  --accent:     #2563eb;
+  --accent-dim: rgba(37,99,235,0.13);
+  --mono:       'Space Mono','Courier New',monospace;
+  --topbar-h:   46px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+/* ── MODE CLAR ─────────────────────────────────────── */
+body.light {
+  --bg:         #ffffff;
+  --surface:    #f5f5f5;
+  --border:     #d0d0d0;
+  --text:       #1a1a1a;
+  --muted:      #6b7280;
+  --accent:     #2563eb;
+  --accent-dim: rgba(37,99,235,0.08);
+}
+body.light { background: var(--bg); color: var(--text); }
+
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   CAPÇALERA
+══════════════════════════════════════════════════════ */
+
+.topbar {
+  height: var(--topbar-h);
+  min-height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.logo-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+/* Navegació global */
+.topbar-nav {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+.topbar-nav-link {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  padding: 4px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+.topbar-nav-link:hover  { background: var(--accent); color: #fff; }
+.topbar-nav-link.active { background: var(--accent); color: #fff; }
+body.light .topbar-nav-link        { color: var(--muted); }
+body.light .topbar-nav-link:hover  { background: var(--accent); color: #fff; }
+body.light .topbar-nav-link.active { background: var(--accent); color: #fff; }
+
+@media (max-width: 500px) {
+  .topbar-nav-link { font-size: 0.6rem; padding: 3px 7px; }
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-left: auto;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   BOTÓ DE TEMA
+══════════════════════════════════════════════════════ */
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+body.light .btn       { border-color: var(--border); background: #fff; color: var(--text); }
+body.light .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.btn-theme {
+  padding: 5px 8px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+
+@media (max-width: 400px) {
+  .topbar { padding: 0 8px; gap: 8px; }
+}

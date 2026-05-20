@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 5 — Construccions clàssiques I | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 5 — Construccions clàssiques I</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 5</span>
+        <h1>Construccions clàssiques I</h1>
+        <p class="chapter-lead">Les construccions clàssiques de la geometria euclidiana —mediatriu, bisectriu, perpendicular— eren fetes amb regle i compàs. GeoGebra les resol en una sola comanda. En aquest capítol dominaràs les tres construccions fonamentals.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Mediatriu
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Mediatriu d'un segment: <code>Mediatriu(A,B)</code></h2>
+
+        <p>La <strong>mediatriu</strong> d'un segment és la recta perpendicular al segment que passa exactament pel seu punt mig. Tots els punts de la mediatriu són equidistants dels dos extrems del segment:</p>
+
+        <pre class="code-example">A=(-3,0)
+B=(3,0)
+Mediatriu(A,B)</pre>
+
+        <div class="geogebra"
+             data-commands="A=(-3,0)
+B=(3,0)
+s=Segment(A,B)
+m=PerpendicularBisector(A,B)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>La mediatriu d'un segment horitzontal és una recta vertical que passa per l'origen. Prova d'arrossegar A o B i veuràs com la mediatriu s'actualitza.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Perpendicular
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Recta perpendicular: <code>Perpendicular(A,f)</code></h2>
+
+        <p>La comanda <code>Perpendicular(A,f)</code> crea la recta que passa pel punt A i és perpendicular a la recta f:</p>
+
+        <pre class="code-example">A=(0,2)
+B=(4,0)
+C=(0,0)
+f=Recta(B,C)
+Perpendicular(A,f)</pre>
+
+        <div class="geogebra"
+             data-commands="f=Line((4,0),(0,0))
+A=(1,2)
+p=PerpendicularLine(A,f)"
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>La recta creada és perpendicular a <em>f</em> i passa exactament per <em>A</em>. Si arrossegues A, la perpendicular es mou seguint-lo però mantenint sempre l'angle de 90°.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Bisectriu d'angle
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Bisectriu d'angle: <code>Bisectriu(f,g)</code></h2>
+
+        <p>La <strong>bisectriu</strong> d'un angle és la semirecta que divideix l'angle en dues parts iguals. La comanda <code>Bisectriu(f,g)</code> rep dues rectes que es creuen i retorna les dues bisectrius (de l'angle i del seu suplement):</p>
+
+        <pre class="code-example">f=Recta((0,0),(4,2))
+g=Recta((0,0),(2,-3))
+Bisectriu(f,g)</pre>
+
+        <div class="geogebra"
+             data-commands="f=Line((0,0),(4,2))
+g=Line((0,0),(2,-3))
+b=AngleBisector(f,g)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>GeoGebra retorna dues rectes bisectrius perpendiculars entre elles. La bisectriu d'un angle i la bisectriu del seu angle adjacent formen sempre 90°.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Combinació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Combinació de construccions</h2>
+
+        <p>Les tres construccions es poden combinar. Per exemple, les tres mediatrius d'un triangle es tallen en un sol punt: el <strong>circumcentre</strong>.</p>
+
+        <div class="geogebra"
+             data-commands="A=(0,4)
+B=(-3,0)
+C=(3,0)
+p=Polygon(A,B,C)
+m1=PerpendicularBisector(A,B)
+m2=PerpendicularBisector(B,C)
+m3=PerpendicularBisector(A,C)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>El punt on es tallen les tres mediatrius és equidistant dels tres vèrtexs — és el centre de la circumferència circumscrita al triangle.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Tens el segment <strong>AB</strong> amb A=(−3, 0) i B=(3, 0) ja construïts. Crea la <strong>mediatriu</strong> del segment AB. Prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-commands="A=(-3,0)
+B=(3,0)
+s=Segment(A,B)"
+             data-fixed="A,B,s"
+             data-goal-id="cap-5-ex"
+             data-height="420">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p>Tres construccions clàssiques en una comanda: <code>Mediatriu(A,B)</code> — recta perpendicular al segment que passa pel punt mig; <code>Perpendicular(A,f)</code> — recta per un punt perpendicular a una recta donada; <code>Bisectriu(f,g)</code> — semirectes que divideixen en dos un angle.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-4.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-6.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(5);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>

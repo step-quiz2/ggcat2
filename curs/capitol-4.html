@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 4 — Mesures | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 4 — Mesures</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 4</span>
+        <h1>Mesures</h1>
+        <p class="chapter-lead">GeoGebra no serveix només per dibuixar — també <strong>mesura</strong>. Pots obtenir distàncies, angles, perímetres i àrees en temps real. En aquest capítol aprendràs les comandes de mesura i com mostrar-ne els valors al pla.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Distància
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Distància entre dos punts: <code>Distància(A,B)</code></h2>
+
+        <p>La comanda <code>Distància(A,B)</code> calcula la distància euclidiana entre dos punts. El resultat és un valor numèric que s'actualitza si mous els punts:</p>
+
+        <pre class="code-example">A=(0,0)
+B=(3,4)
+d=Distància(A,B)</pre>
+
+        <p>La distància entre (0,0) i (3,4) és 5 (teorema de Pitàgores: √(3²+4²) = 5):</p>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(3,4)
+s=Segment(A,B)
+d=Distance(A,B)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>El valor <strong>d</strong> apareix a la vista algebraica. Com que s'ha creat el segment, la longitud del segment ja mostra el valor — <code>Distància</code> és útil quan vols emmagatzemar el valor per usar-lo en expressions posteriors.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Angle
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Angle: <code>Angle(A,B,C)</code></h2>
+
+        <p>La comanda <code>Angle(A,B,C)</code> mesura l'angle format per les semirectes BA i BC, és a dir, l'angle a B quan mires de B cap a A i de B cap a C. El resultat s'expressa en graus (°) per defecte:</p>
+
+        <pre class="code-example">A=(3,0)
+B=(0,0)
+C=(0,3)
+α=Angle(A,B,C)</pre>
+
+        <p>En aquest triangle rectangle l'angle en B és 90°:</p>
+
+        <div class="geogebra"
+             data-commands="A=(3,0)
+B=(0,0)
+C=(0,3)
+p=Polygon(A,B,C)
+α=Angle(A,B,C)"
+             data-readonly="true"
+             data-height="380">
+        </div>
+
+        <p>L'arc de circumferència que dibuixa GeoGebra indica visualment l'angle mesurat. El valor apareix etiqueta al costat de l'arc.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Àrea
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Àrea: <code>Àrea(p)</code></h2>
+
+        <p>La comanda <code>Àrea(p)</code> calcula l'àrea d'un polígon o d'una circumferència. Prèviament has de tenir el polígon creat:</p>
+
+        <pre class="code-example">A=(0,0)
+B=(4,0)
+C=(4,3)
+p=Polígon(A,B,C)
+a=Àrea(p)</pre>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(4,0)
+C=(4,3)
+p=Polygon(A,B,C)
+a=Area(p)"
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>L'àrea d'un triangle rectangle de catets 4 i 3 és 6 (= ½ · base · altura). Arrossega els vèrtexs i observa com l'àrea s'actualitza automàticament.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Perímetre
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Perímetre: <code>Perímetre(p)</code></h2>
+
+        <p>La comanda <code>Perímetre(p)</code> suma automàticament tots els costats del polígon:</p>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(5,0)
+C=(5,3)
+D=(0,3)
+p=Polygon(A,B,C,D)
+per=Perimeter(p)
+a=Area(p)"
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>Per a un rectangle de 5×3: perímetre = 2·(5+3) = 16 i àrea = 5·3 = 15. Confirma els valors a la vista algebraica.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Tens un triangle amb vèrtexs <strong>A=(0,0)</strong>, <strong>B=(4,0)</strong> i <strong>C=(2,3)</strong> ja construïts. Mesura <strong>l'angle en el vèrtex B</strong> (l'angle format per BA i BC). Prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(4,0)
+C=(2,3)
+p=Polygon(A,B,C)"
+             data-fixed="A,B,C,p"
+             data-goal-id="cap-4-ex"
+             data-height="420">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p>Les comandes de mesura: <code>Distància(A,B)</code> per la distància entre dos punts; <code>Angle(A,B,C)</code> per l'angle en B (de A cap a C); <code>Àrea(p)</code> per l'àrea d'un polígon o circumferència; <code>Perímetre(p)</code> per la suma dels costats. Totes les mesures s'actualitzen dinàmicament quan mous els objectes.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-3.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-5.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(4);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>

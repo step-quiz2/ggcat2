@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 1 — Benvingut a GeoGebra | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 1 — Benvingut a GeoGebra</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 1</span>
+        <h1>Benvingut a GeoGebra</h1>
+        <p class="chapter-lead">GeoGebra és una eina per explorar i construir geometria de manera interactiva. En lloc d'escriure instruccions de text com a Python, aquí <strong>construeixes amb comandes geomètriques</strong> i veus el resultat al pla de coordenades en temps real.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — El pla de coordenades
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>El pla de coordenades</h2>
+
+        <p>GeoGebra treballa sobre el <strong>pla cartesià</strong>: dos eixos perpendiculars (X horitzontal, Y vertical) que es creuen a l'<strong>origen</strong> (0, 0). Cada punt del pla té una posició expressada com a parella de coordenades <code>(x, y)</code>.</p>
+
+        <p>Observa el pla buit. Pots arrossegar-lo i fer zoom amb la roda del ratolí:</p>
+
+        <div class="geogebra"
+             data-readonly="true"
+             data-height="340">
+        </div>
+
+        <p>L'eix X creix cap a la dreta; l'eix Y creix cap amunt. El quadrant superior dret té coordenades positives en tots dos eixos.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Crear punts
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Crear punts: <code>A=(x,y)</code></h2>
+
+        <p>La forma més directa de crear un punt és escriure el seu nom i les coordenades a la <strong>barra d'entrada</strong> (la caixa de text a la part inferior de l'applet). La sintaxi és:</p>
+
+        <pre class="code-example">A=(3,2)</pre>
+
+        <p>Observa l'exemple. Tres punts ja estan construïts: <strong>A</strong>, <strong>B</strong> i <strong>C</strong>. Fixa't en com cada un apareix a la seva posició exacta:</p>
+
+        <div class="geogebra"
+             data-commands="A=(1,1)
+B=(4,3)
+C=(-2,2)"
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>GeoGebra etiqueta automàticament cada punt. La lletra majúscula és el nom; entre parèntesis hi ha les coordenades.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — La comanda Punt()
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>La comanda <code>Punt(x,y)</code></h2>
+
+        <p>Una alternativa equivalent és la comanda <code>Punt(x,y)</code>. GeoGebra li assigna automàticament la propera lletra disponible. Ambdues formes fan exactament el mateix:</p>
+
+        <pre class="code-example">Punt(0,0)
+Punt(2,-1)</pre>
+
+        <p>Prova-ho al widget inferior — és editable. Esborra el contingut de la barra d'entrada i escriu-hi les comandes anteriors, una a una, prement Enter:</p>
+
+        <div class="geogebra"
+             data-height="360">
+        </div>
+
+        <p>Tant <code>A=(x,y)</code> com <code>Punt(x,y)</code> creen el mateix tipus d'objecte. Utilitza la forma que et sembli més clara.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Coordenades negatives i decimals
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Coordenades negatives i decimals</h2>
+
+        <p>Les coordenades poden ser nombres negatius o decimals. GeoGebra accepta notació de punt decimal (<code>1.5</code>) o fraccionària (<code>3/2</code>). Observa uns quants exemples:</p>
+
+        <div class="geogebra"
+             data-commands="P=(-3,-2)
+Q=(0,2.5)
+R=(1.5,0)"
+             data-readonly="true"
+             data-height="360">
+        </div>
+
+        <p>El punt <strong>R=(1.5, 0)</strong> cau exactament sobre l'eix X — la seva coordenada Y és zero. El punt <strong>P=(-3,-2)</strong> és al quadrant inferior esquerre.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Crea el punt <strong>P = (3, 2)</strong> al pla. Escriu la comanda a la barra d'entrada i prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-goal-id="cap-1-ex"
+             data-height="400">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p>Has après les bases de GeoGebra en aquest capítol: el pla de coordenades (eixos X i Y, origen), crear punts amb la sintaxi <code>A=(x,y)</code> o la comanda <code>Punt(x,y)</code>, i que les coordenades poden ser positives, negatives o decimals.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="index.html" class="btn-nav btn-nav--prev">← Índex</a>
+        <a href="capitol-2.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(1);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>

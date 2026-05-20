@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 10 — Lliscadors i construccions dinàmiques | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 10 — Lliscadors i construccions dinàmiques</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 10</span>
+        <h1>Lliscadors i construccions dinàmiques</h1>
+        <p class="chapter-lead">Un <strong>lliscador</strong> és un paràmetre numèric que l'usuari pot canviar arrossegant un control. Permet crear construccions que s'adapten dinàmicament: animacions, exploració de famílies de corbes, simulacions geomètriques. És una de les funcionalitats més potents de GeoGebra.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Crear un lliscador
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Crear un lliscador: <code>Lliscador(min,max,pas)</code></h2>
+
+        <p>La comanda <code>Lliscador(min,max,pas)</code> crea un control numèric interactiu. El paràmetre resultant pot usar-se en qualsevol expressió:</p>
+
+        <pre class="code-example">a = Lliscador(1, 5, 0.1)
+b = Lliscador(0, 10, 0.5)</pre>
+
+        <p>Un cercle amb radi controlat per un lliscador — arrossega el lliscador per canviar el radi:</p>
+
+        <div class="geogebra"
+             data-commands="r=Slider(1,5,0.1)
+O=(0,0)
+c=Circle(O,r)"
+             data-height="380">
+        </div>
+
+        <p>El lliscador <strong>r</strong> apareix com a control a la cantonada superior esquerra. Cada vegada que el mous, el cercle s'actualitza instantàniament.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Lliscadors en funcions
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Lliscadors en funcions</h2>
+
+        <p>Pots usar un lliscador com a paràmetre en una funció per explorar famílies de corbes. Aquesta és una manera excel·lent d'entendre com cada coeficient afecta la gràfica:</p>
+
+        <pre class="code-example">a = Lliscador(-3, 3, 0.1)
+b = Lliscador(-5, 5, 0.5)
+f(x) = a*x^2 + b</pre>
+
+        <p>Canvia els coeficients amb els lliscadors i observa com es transforma la paràbola:</p>
+
+        <div class="geogebra"
+             data-commands="a=Slider(-3,3,0.1)
+b=Slider(-5,5,0.5)
+f(x)=a*x^2+b"
+             data-app="graphing"
+             data-height="400">
+        </div>
+
+        <p>Quan a=0 la paràbola es degrada en una línia horitzontal. Quan a és negatiu s'obre cap avall. El paràmetre b desplaça la corba verticalment.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Lloc geomètric
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Lloc geomètric: <code>Lloc(B,A)</code></h2>
+
+        <p>La comanda <code>Lloc(B,A)</code> dibuixa el camí que segueix el punt B quan el punt A es mou per un objecte. És ideal per descobrir corbes geomètriques:</p>
+
+        <pre class="code-example">c = Cercle((0,0), 3)
+A = Punt(c)       (* A es mou per c *)
+M = PuntMig(A,(4,0))
+Lloc(M,A)</pre>
+
+        <p>El lloc de tots els punts mig entre un punt d'un cercle i un punt fix exterior forma una el·lipse:</p>
+
+        <div class="geogebra"
+             data-commands="c=Circle((0,0),3)
+A=Point(c)
+F=(4,0)
+M=Midpoint(A,F)
+loc=Locus(M,A)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>Arrossega el punt A per la circumferència i veuràs que M traça una el·lipse. La comanda <code>Lloc</code> fa aquest traçat automàticament.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Animació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Animació automàtica</h2>
+
+        <p>Pots animar un lliscador fent clic dret sobre ell i seleccionant «Animació». GeoGebra mou automàticament el paràmetre d'un extrem a l'altre en bucle. Combina-ho amb una funció per veure una animació en temps real:</p>
+
+        <div class="geogebra"
+             data-commands="t=Slider(0,2*pi,0.05)
+P=(cos(t),sin(t))
+r=Segment((0,0),P)
+c=Circle((0,0),1)"
+             data-height="380">
+        </div>
+
+        <p>Si animes el lliscador <strong>t</strong> (fes-hi clic dret → Animació activada), el punt P recorre la circumferència i el segment r gira com les busques d'un rellotge.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           PROJECTE FINAL
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Projecte: construcció dinàmica lliure</h2>
+
+        <div class="exercise-enunciat">
+          Crea una construcció dinàmica amb almenys <strong>un lliscador</strong> que controli alguna propietat geomètrica (radi, angle, amplada, posició…). La construcció ha d'incloure almenys <strong>un polígon o una circumferència</strong>. Explora i experimenta! Prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-goal-id="cap-10-ex"
+             data-height="460">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum del curs</h2>
+        <p>Has completat el curs GeoCat! Has après a treballar amb punts, rectes, segments, circumferències, mesures, construccions clàssiques, polígons, transformacions, funcions i ara lliscadors dinàmics. GeoGebra és una eina immensament rica — continua explorant amb els <a href="repte-1.html">reptes</a> per seguir practicant.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-9.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="index.html" class="btn-nav btn-nav--next">Índex del curs →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(10);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>

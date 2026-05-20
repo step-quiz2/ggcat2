@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capítol 8 — Transformacions | GeoCat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="curs.css">
+  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+</head>
+<body>
+
+<header class="curs-header">
+  <button id="sidebar-toggle" aria-label="Mostra/amaga els capítols" aria-expanded="false">☰</button>
+  <span class="curs-header-logo">
+    <span class="logo-icon"></span>
+    GeoCat
+  </span>
+  <nav class="curs-nav">
+    <a href="capitol-1.html" class="active">Capítols</a>
+    <a href="repte-1.html">Reptes</a>
+  </nav>
+  <span class="curs-header-title">Capítol 8 — Transformacions</span>
+  <div class="curs-header-actions"></div>
+</header>
+
+<div class="curs-layout">
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+  <nav id="sidebar" class="curs-sidebar" aria-label="Capítols del curs">
+    <div id="sidebar-nav"></div>
+  </nav>
+
+  <main class="curs-content">
+    <div class="chapter-content-inner">
+
+
+      <!-- ─────────────────────────────────────────
+           CAPÇALERA DEL CAPÍTOL
+           ───────────────────────────────────────── -->
+      <header class="chapter-header">
+        <span class="chapter-badge">Capítol 8</span>
+        <h1>Transformacions</h1>
+        <p class="chapter-lead">Les <strong>transformacions geomètriques</strong> mouen, giren o reflecteixen figures mantenint certes propietats. GeoGebra permet aplicar translacions, rotacions, reflexions i homotècies en una sola comanda, i veure el resultat al moment.</p>
+      </header>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 1 — Translació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Translació: <code>Translació(obj,v)</code></h2>
+
+        <p>Una <strong>translació</strong> desplaça un objecte la distància i la direcció indicades per un vector. La sintaxi és <code>Translació(objecte, vector)</code>. Un vector es defineix com a <code>(dx,dy)</code>:</p>
+
+        <pre class="code-example">A=(0,0)
+B=(3,2)
+C=(1,4)
+t=Polígon(A,B,C)
+v=(3,1)
+t2=Translació(t,v)</pre>
+
+        <div class="geogebra"
+             data-commands="A=(0,0)
+B=(3,2)
+C=(1,4)
+t=Polygon(A,B,C)
+v=(3,1)
+t2=Translate(t,v)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>La figura resultant és congruent a l'original: mateixa forma i mida, desplaçada 3 unitats a la dreta i 1 amunt.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 2 — Rotació
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Rotació: <code>Rotació(obj,A,α)</code></h2>
+
+        <p>Una <strong>rotació</strong> gira un objecte un angle α al voltant d'un punt central A. L'angle es pot expressar en graus (posant el símbol °):</p>
+
+        <pre class="code-example">A=(0,0)
+B=(3,1)
+C=(4,3)
+D=(1,2)
+p=Polígon(A,B,C,D)
+O=(0,0)
+p2=Rotació(p,O,90°)</pre>
+
+        <div class="geogebra"
+             data-commands="B=(3,1)
+C=(4,3)
+D=(1,2)
+p=Polygon(B,C,D)
+O=(0,0)
+p2=Rotate(p,90°,O)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>La rotació de 90° al voltant de l'origen mou cada punt (x,y) a la posició (−y, x). L'angle positiu indica rotació en sentit antihorari.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 3 — Reflexió
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Reflexió: <code>Reflexió(obj,f)</code></h2>
+
+        <p>Una <strong>reflexió</strong> (o simetria axial) "capgira" una figura respecte una recta eix. La figura resultant és la imatge especular de l'original:</p>
+
+        <pre class="code-example">A=(1,1)
+B=(4,1)
+C=(3,4)
+t=Polígon(A,B,C)
+eix=Recta((0,0),(0,1))
+t2=Reflexió(t,eix)</pre>
+
+        <div class="geogebra"
+             data-commands="A=(1,1)
+B=(4,1)
+C=(3,4)
+t=Polygon(A,B,C)
+eix=Line((0,0),(0,1))
+t2=Reflect(t,eix)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>La reflexió respecte l'eix Y (la recta x=0) transforma cada punt (x,y) en (−x,y). El triangle reflectit és simètric al original respecte l'eix vertical.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           SECCIÓ 4 — Homotècia
+           ───────────────────────────────────────── -->
+      <section class="chapter-section">
+        <h2>Homotècia: <code>Homotècia(obj,O,k)</code></h2>
+
+        <p>L'<strong>homotècia</strong> (o semblança de raó k) amplia o redueix una figura respecte un centre O. Si k=2, la figura es dobla; si k=0.5, es redueix a la meitat:</p>
+
+        <div class="geogebra"
+             data-commands="A=(1,1)
+B=(3,1)
+C=(2,3)
+t=Polygon(A,B,C)
+O=(0,0)
+t2=Dilate(t,2,O)"
+             data-readonly="true"
+             data-height="400">
+        </div>
+
+        <p>Amb k=2 i centre a l'origen, tots els vèrtexs es doblen: (1,1)→(2,2), (3,1)→(6,2), (2,3)→(4,6). La figura resultant és similar però no congruent a l'original.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           EXERCICI
+           ───────────────────────────────────────── -->
+      <section class="chapter-section chapter-exercise">
+        <h2>Exercici</h2>
+
+        <div class="exercise-enunciat">
+          Tens el triangle <strong>ABC</strong> i l'eix de reflexió <strong>f</strong> (eix Y) ja construïts. Crea el triangle <strong>reflectit</strong> respecte l'eix f. Prem <strong>✓ Comprova</strong> quan acabis.
+        </div>
+
+        <div class="geogebra"
+             data-commands="A=(1,1)
+B=(4,1)
+C=(2,4)
+t=Polygon(A,B,C)
+f=Line((0,-5),(0,5))"
+             data-fixed="A,B,C,t,f"
+             data-goal-id="cap-8-ex"
+             data-height="420">
+        </div>
+      </section>
+
+
+      <section class="chapter-section">
+        <h2>Resum</h2>
+        <p>Quatre transformacions: <code>Translació(obj,v)</code> desplaça per un vector; <code>Rotació(obj,O,α)</code> gira un angle al voltant d'un punt; <code>Reflexió(obj,f)</code> reflecteix respecte una recta; <code>Homotècia(obj,O,k)</code> amplia o redueix per un factor k. Translació, rotació i reflexió conserven les distàncies (isometries); l'homotècia les escala.</p>
+      </section>
+
+
+      <!-- ─────────────────────────────────────────
+           NAVEGACIÓ
+           ───────────────────────────────────────── -->
+      <nav class="chapter-nav" aria-label="Navegació entre capítols">
+        <a href="capitol-7.html" class="btn-nav btn-nav--prev">← Capítol anterior</a>
+        <a href="capitol-9.html" class="btn-nav btn-nav--next">Capítol següent →</a>
+      </nav>
+
+
+    </div>
+  </main>
+</div>
+
+<script src="glossari-data.js"></script>
+<script src="geovalidator.js"></script>
+<script src="validators.js"></script>
+<script src="capitols.js"></script>
+<script>
+  injectCursLogo();
+  renderSidebar(8);
+  renderSimuladors();
+  initSidebarToggle();
+</script>
+
+</body>
+</html>
