@@ -304,6 +304,9 @@ function renderSimuladors() {
         console.log('[GeoCat] ✓ Applet ' + cfg.id + ' carregat OK');
         wrapper._ggbApi = api;
 
+        // Només Vista Gràfica (amaga la columna d'àlgebra de l'esquerra)
+        api.setPerspective('G');
+
         // Eixos i graella sempre visibles
         api.evalCommand('ShowAxes(true)');
         api.evalCommand('ShowGrid(true)');
