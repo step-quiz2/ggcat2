@@ -292,7 +292,7 @@ function renderSimuladors() {
       width:               W,
       height:              H,
       showToolBar:         !cfg.readonly,
-      showAlgebraInput:    !cfg.readonly,
+      showAlgebraInput:    false,
       showMenuBar:         false,
       enableRightClick:    !cfg.readonly,
       enableLabelDrags:    !cfg.readonly,
