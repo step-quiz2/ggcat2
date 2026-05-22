@@ -46,13 +46,13 @@
     'cap-2-ex': {
       // Inicial: A=(-3,0), B=(3,0), s=Segment(A,B) [fixats]
       label: 'Cap 2 — Punt mig de AB',
-      correct: ['M=PuntMig(A,B)'],             // → punt a (0,0) ✓
+      correct: ['M=Midpoint(A,B)'],            // → punt a (0,0) ✓
       wrong:   ['N=(1,1)']                     // → punt fora origen ✗
     },
     'cap-3-ex': {
       label: 'Cap 3 — Circumferència centre (0,0) radi 3',
-      correct: ['O=(0,0)', 'c=Cercle(O,3)'],
-      wrong:   ['O=(0,0)', 'c=Cercle(O,2)']    // radi incorrecte
+      correct: ['O=(0,0)', 'c=Circle(O,3)'],
+      wrong:   ['O=(0,0)', 'c=Circle(O,2)']    // radi incorrecte
     },
     'cap-4-ex': {
       // Inicial: A=(0,0), B=(4,0), C=(2,3), p=Polygon(A,B,C) [fixats]
@@ -64,28 +64,28 @@
     'cap-5-ex': {
       // Inicial: A=(-3,0), B=(3,0), s=Segment(A,B) [fixats]
       label: 'Cap 5 — Mediatriu de AB',
-      correct: ['m=Mediatriu(A,B)'],
-      wrong:   ['m=Recta(A,B)']                // recta AB no és perpendicular a si mateixa
+      correct: ['m=PerpendicularBisector(A,B)'],
+      wrong:   ['m=Line(A,B)']                 // recta AB no és perpendicular a si mateixa
     },
     'cap-6-ex': {
       // Inicial: f=Line((0,0),(3,1)), P=(0,3) [fixats]
       label: 'Cap 6 — Paral·lela a f per P',
-      correct: ['g=Paral·lela(f,P)'],
+      correct: ['g=Parallel(f,P)'],
       wrong:   ['g=Perpendicular(P,f)']        // perpendicular, no paral·lela
     },
     'cap-7-ex': {
       label: 'Cap 7 — Hexàgon regular (6 costats)',
-      correct: ['A=(0,0)', 'B=(1,0)', 'h=PolígonRegular(A,B,6)'],
-      wrong:   ['A=(0,0)', 'B=(3,0)', 't=PolígonRegular(A,B,3)']   // triangle = 3 costats
+      correct: ['A=(0,0)', 'B=(1,0)', 'h=Polygon(A,B,6)'],
+      wrong:   ['A=(0,0)', 'B=(3,0)', 't=Polygon(A,B,3)']    // triangle = 3 costats
     },
     'cap-8-ex': {
       // Inicial: A=(1,1), B=(4,1), C=(2,4), t=Polygon(A,B,C), f=Line((0,-5),(0,5)) [fixats]
       // f és l'eix Y; reflectir t respecte f.
       label: 'Cap 8 — Reflexió sobre l\'eix Y',
-      correct: ['t2=Reflexió(t,f)'],           // imatge: (-1,1), (-4,1), (-2,4) ✓
+      correct: ['t2=Reflect(t,f)'],            // imatge: (-1,1), (-4,1), (-2,4) ✓
       wrong: [                                 // crea un polígon a coordenades equivocades
         'A2=(1,-1)', 'B2=(4,-1)', 'C2=(2,-4)',
-        't2=Polígon(A2,B2,C2)'
+        't2=Polygon(A2,B2,C2)'
       ]
     },
     'cap-9-ex': {
@@ -96,8 +96,8 @@
     },
     'cap-10-ex': {
       label: 'Cap 10 — Lliscador + cercle dinàmic',
-      correct: ['a=Lliscador(1,5)', 'O=(0,0)', 'c=Cercle(O,a)'],
-      wrong:   ['O=(0,0)', 'c=Cercle(O,3)']    // sense lliscador
+      correct: ['a=Slider(1,5)', 'O=(0,0)', 'c=Circle(O,a)'],
+      wrong:   ['O=(0,0)', 'c=Circle(O,3)']    // sense lliscador
     },
 
 
@@ -105,7 +105,7 @@
 
     'repte-1': {
       label: 'Repte 1 — Triangle des de zero',
-      correct: ['A=(-2,-1)', 'B=(4,-1)', 'C=(1,4)', 't=Polígon(A,B,C)'],
+      correct: ['A=(-2,-1)', 'B=(4,-1)', 'C=(1,4)', 't=Polygon(A,B,C)'],
       wrong:   ['A=(-2,-1)', 'B=(4,-1)', 'C=(1,4)']   // punts sense polígon (cap segment)
     },
     'repte-2': {
@@ -115,52 +115,52 @@
     },
     'repte-3': {
       label: 'Repte 3 — Circumferències concèntriques r=2 i r=4',
-      correct: ['O=(0,0)', 'c=Cercle(O,2)', 'd=Cercle(O,4)'],
-      wrong:   ['O=(0,0)', 'c=Cercle(O,2)']    // només una circumferència
+      correct: ['O=(0,0)', 'c=Circle(O,2)', 'd=Circle(O,4)'],
+      wrong:   ['O=(0,0)', 'c=Circle(O,2)']    // només una circumferència
     },
     'repte-4': {
       label: 'Repte 4 — Triangle amb àrea i angle',
       correct: [
         'A=(0,0)', 'B=(6,0)', 'C=(3,4)',
-        't=Polígon(A,B,C)',
-        'ar=Àrea(t)',                          // ≈ 12
+        't=Polygon(A,B,C)',
+        'ar=Area(t)',                          // ≈ 12
         'al=Angle(A,B,C)'                      // angle a B ≈ 53.13°
       ],
       wrong: [
         'A=(0,0)', 'B=(6,0)', 'C=(3,4)',
-        't=Polígon(A,B,C)'                     // sense àrea ni angle
+        't=Polygon(A,B,C)'                     // sense àrea ni angle
       ]
     },
     'repte-5': {
       label: 'Repte 5 — Quadrat a l\'origen, costat 3',
-      correct: ['A=(0,0)', 'B=(3,0)', 'q=PolígonRegular(A,B,4)'],
-      wrong:   ['A=(0,0)', 'B=(2,0)', 'q=PolígonRegular(A,B,4)']    // costat 2 (incorrecte)
+      correct: ['A=(0,0)', 'B=(3,0)', 'q=Polygon(A,B,4)'],
+      wrong:   ['A=(0,0)', 'B=(2,0)', 'q=Polygon(A,B,4)']    // costat 2 (incorrecte)
     },
     'repte-6': {
       // Inicial: A=(-4,-1), B=(4,3), s=Segment(A,B) [fixats]
       // Punt mig de AB = (0, 1) → ja és a l'eix Y.
       label: 'Repte 6 — Mediatriu i intersecció',
-      correct: ['m=Mediatriu(A,B)', 'M=PuntMig(A,B)'],
-      wrong:   ['m=Recta(A,B)']                // recta AB, no mediatriu
+      correct: ['m=PerpendicularBisector(A,B)', 'M=Midpoint(A,B)'],
+      wrong:   ['m=Line(A,B)']                 // recta AB, no mediatriu
     },
     'repte-7': {
       label: 'Repte 7 — Triangle equilàter',
-      correct: ['A=(0,0)', 'B=(4,0)', 'eq=PolígonRegular(A,B,3)'],
-      wrong:   ['A=(0,0)', 'B=(3,0)', 'C=(1,2)', 't=Polígon(A,B,C)']   // escalè
+      correct: ['A=(0,0)', 'B=(4,0)', 'eq=Polygon(A,B,3)'],
+      wrong:   ['A=(0,0)', 'B=(3,0)', 'C=(1,2)', 't=Polygon(A,B,C)']   // escalè
     },
     'repte-8': {
       // Inicial: f=Line((0,0),(4,1)), P=(3,4) [fixats]
       label: 'Repte 8 — Perpendicular i peu',
-      correct: ['g=Perpendicular(P,f)', 'F=Intersecció(g,f)'],
+      correct: ['g=Perpendicular(P,f)', 'F=Intersect(g,f)'],
       wrong:   ['F=(0,0)']                     // cap perpendicular, peu equivocat
     },
     'repte-9': {
       // Inicial: A=(0,0), B=(6,0), C=(2,5), t=Polygon(A,B,C) [fixats]
       label: 'Repte 9 — Circumcentre',
       correct: [
-        'm1=Mediatriu(A,B)',
-        'm2=Mediatriu(B,C)',
-        'D=Intersecció(m1,m2)'                 // circumcentre ≈ (3, 1.7)
+        'm1=PerpendicularBisector(A,B)',
+        'm2=PerpendicularBisector(B,C)',
+        'D=Intersect(m1,m2)'                   // circumcentre ≈ (3, 1.7)
       ],
       wrong: ['D=(2,2)']                        // punt qualsevol, no equidistant
     },
@@ -171,11 +171,11 @@
       label: 'Repte 10 — Rombus a l\'origen',
       correct: [
         'A=(0,0)', 'B=(3,0)', 'C=(4.5,2.598)', 'D=(1.5,2.598)',
-        'r=Polígon(A,B,C,D)'                   // rombus amb angle 60°/120°
+        'r=Polygon(A,B,C,D)'                   // rombus amb angle 60°/120°
       ],
       wrong: [
         'A=(0,0)', 'B=(3,0)', 'C=(3,3)', 'D=(0,3)',
-        'sq=Polígon(A,B,C,D)',                 // quadrat (4 costats iguals però angle 90°)
+        'sq=Polygon(A,B,C,D)',                 // quadrat (4 costats iguals però angle 90°)
         'alfa=Angle(D,A,B)'                    // mesura explícitament l'angle de 90°
       ]
     }
@@ -214,69 +214,104 @@
 
 
   // ══════════════════════════════════════════════════════════
-  // 3. EXECUCIÓ d'un escenari (correct o wrong) sobre un wrapper
+  // 3. CARREGA UN IFRAME I EXECUTA UN ESCENARI
   //
-  // Reinicia → injecta comandes → clica "✓ Comprova" → llegeix
-  // el badge resultant.
+  // En lloc de reutilitzar el mateix iframe i fer "Reinicia" entre
+  // escenaris (que en algunes versions de GeoGebra deixa l'applet en
+  // un estat inestable on certes comandes evalCommand fallen),
+  // utilitzem un iframe NET per a cada escenari. És més lent però
+  // garanteix un estat inicial perfecte.
   // ══════════════════════════════════════════════════════════
 
-  function runScenario(wrapper, commands) {
-    var api = wrapper._ggbApi;
+  function loadAndRunScenario(arxiu, goalId, commands) {
+    var iframe = document.createElement('iframe');
+    iframe.src = arxiu;
+    iframe.style.cssText =
+      'position:fixed; left:-10000px; top:0; ' +
+      'width:900px; height:700px; border:0; visibility:hidden;';
+    document.body.appendChild(iframe);
 
-    // 1. Reset: clica el botó Reinicia (això esborra l'estat i
-    //    re-aplica les comandes inicials i els objectes fixats).
-    var resetBtn = wrapper.querySelector('.ggb-btn-reset');
-    if (resetBtn) resetBtn.click();
+    function cleanup() { try { iframe.remove(); } catch (_) {} }
 
     var failedCommands = [];
 
-    return delay(300).then(function() {
-      // 2. Injecta cada comanda seqüencialment, amb un petit delay
-      //    entre elles perquè GeoGebra processi les comandes complexes.
-      //    Capturem el retorn d'evalCommand: false significa que la
-      //    comanda no s'ha pogut parsejar (típicament nom desconegut).
-      return (commands || []).reduce(function(prev, cmd) {
-        return prev.then(function() {
-          if (!cmd) return;
-          var ok = true;
-          try {
-            ok = api.evalCommand(cmd);
-            if (ok === false) failedCommands.push(cmd);
-          } catch (e) {
-            failedCommands.push(cmd + ' [' + (e && e.message) + ']');
-            console.warn('[debug-tester] evalCommand error:', cmd, e);
+    // 1) Espera document complete
+    return waitFor(function() {
+      return iframe.contentDocument &&
+             iframe.contentDocument.readyState === 'complete';
+    }, 25000).then(function() {
+
+      // 2) Espera applet ready (badge "llest" i _ggbApi assignat)
+      return waitFor(function() {
+        var doc = iframe.contentDocument;
+        if (!doc) return null;
+        var wrappers = doc.querySelectorAll('.geogebra-wrap');
+        for (var i = 0; i < wrappers.length; i++) {
+          var w = wrappers[i];
+          if (w._ggbCfg && w._ggbCfg.goalId === goalId && w._ggbApi) {
+            var badge = w.querySelector('.ggb-badge');
+            if (badge && badge.classList.contains('ggb-ready')) return w;
           }
-          return delay(80);    // dóna temps a GeoGebra a processar
-        });
-      }, Promise.resolve());
-    }).then(function() {
-      return delay(300);
-    }).then(function() {
-      // 3. Clica el botó Comprova
-      var checkBtn = wrapper.querySelector('.ggb-btn-check');
-      if (!checkBtn) throw new Error('Botó "Comprova" no trobat');
-      checkBtn.click();
-      // El handler de Comprova té un setTimeout de 100ms; esperem 400ms
-      return delay(400);
-    }).then(function() {
-      // 4. Llegeix el badge
-      var badge = wrapper.querySelector('.ggb-badge');
-      return {
-        text: badge ? badge.textContent.trim() : '',
-        ok:   !!(badge && badge.classList.contains('ggb-ok')),
-        ko:   !!(badge && badge.classList.contains('ggb-ko')),
-        failedCommands: failedCommands
-      };
+        }
+        return null;
+      }, 45000);
+
+    }).then(function(wrapper) {
+      var api = wrapper._ggbApi;
+
+      // 3) Marge generós després de "ready": deixa que els mòduls
+      //    de GeoGebra que es carreguen "lazy" (PerpendicularBisector,
+      //    Reflect, Slider, etc.) estiguin totalment disponibles.
+      return delay(1200).then(function() {
+
+        // 4) Injecta cada comanda seqüencialment, amb delays petits.
+        return (commands || []).reduce(function(prev, cmd) {
+          return prev.then(function() {
+            if (!cmd) return;
+            try {
+              var ok = api.evalCommand(cmd);
+              if (ok === false) failedCommands.push(cmd);
+            } catch (e) {
+              failedCommands.push(cmd + ' [' + (e && e.message) + ']');
+              console.warn('[debug-tester] evalCommand error:', cmd, e);
+            }
+            return delay(150);
+          });
+        }, Promise.resolve());
+
+      }).then(function() {
+        return delay(400);
+      }).then(function() {
+        // 5) Clica Comprova
+        var checkBtn = wrapper.querySelector('.ggb-btn-check');
+        if (!checkBtn) throw new Error('Botó "Comprova" no trobat');
+        checkBtn.click();
+        return delay(500);
+      }).then(function() {
+        // 6) Llegeix badge
+        var badge = wrapper.querySelector('.ggb-badge');
+        var result = {
+          text: badge ? badge.textContent.trim() : '',
+          ok:   !!(badge && badge.classList.contains('ggb-ok')),
+          ko:   !!(badge && badge.classList.contains('ggb-ko')),
+          failedCommands: failedCommands
+        };
+        cleanup();
+        return result;
+      });
+    }).catch(function(err) {
+      cleanup();
+      throw err;
     });
   }
 
 
   // ══════════════════════════════════════════════════════════
-  // 4. TEST COMPLET d'una pàgina (capitol-N.html o repte-N.html)
+  // 4. TEST COMPLET d'una pàgina
   //
-  // Crea un iframe invisible, espera que carregui i que el seu
-  // applet GeoGebra estigui llest, executa l'escenari correcte
-  // i l'incorrecte, i retorna el veredicte.
+  // Per a cada (arxiu, goalId), executa l'escenari CORRECTE en un
+  // iframe fresc, després l'escenari INCORRECTE en un altre iframe
+  // fresc. Total: 2 càrregues d'applet per exercici.
   // ══════════════════════════════════════════════════════════
 
   function runTestForFile(arxiu, goalId) {
@@ -290,67 +325,22 @@
       });
     }
 
-    // Crea iframe invisible (offscreen però amb mida real perquè
-    // GeoGebra calculi correctament les dimensions del canvas).
-    var iframe = document.createElement('iframe');
-    iframe.src = arxiu;
-    iframe.style.cssText =
-      'position:fixed; left:-10000px; top:0; ' +
-      'width:900px; height:700px; border:0; visibility:hidden;';
-    document.body.appendChild(iframe);
-
-    function cleanup() {
-      try { iframe.remove(); } catch (_) {}
-    }
-
-    // 1) Espera que el document de l'iframe estigui complete
-    return waitFor(function() {
-      return iframe.contentDocument &&
-             iframe.contentDocument.readyState === 'complete';
-    }, 25000).then(function() {
-
-      // 2) Espera que el wrapper amb el nostre goalId tingui _ggbApi
-      //    i el badge en estat "llest"
-      return waitFor(function() {
-        var doc = iframe.contentDocument;
-        if (!doc) return null;
-        var wrappers = doc.querySelectorAll('.geogebra-wrap');
-        for (var i = 0; i < wrappers.length; i++) {
-          var w = wrappers[i];
-          if (w._ggbCfg && w._ggbCfg.goalId === goalId && w._ggbApi) {
-            var badge = w.querySelector('.ggb-badge');
-            if (badge && badge.classList.contains('ggb-ready')) return w;
-          }
-        }
-        return null;
-      }, 45000);   // GeoGebra pot tardar bastant a carregar el CDN
-
-    }).then(function(wrapper) {
-      // 3) Executa escenari CORRECTE
-      return runScenario(wrapper, testData.correct)
-        .then(function(correctResult) {
-          // 4) Executa escenari INCORRECTE
-          return runScenario(wrapper, testData.wrong)
-            .then(function(wrongResult) {
-              var correctPassed = correctResult.ok === true;
-              var wrongPassed   = wrongResult.ko === true;
-              return {
-                goalId: goalId,
-                arxiu: arxiu,
-                label: testData.label,
-                correctResult: correctResult,
-                wrongResult: wrongResult,
-                correctPassed: correctPassed,
-                wrongPassed: wrongPassed,
-                passed: correctPassed && wrongPassed
-              };
-            });
-        });
-    }).then(function(result) {
-      cleanup();
-      return result;
-    }, function(err) {
-      cleanup();
+    return loadAndRunScenario(arxiu, goalId, testData.correct).then(function(correctResult) {
+      return loadAndRunScenario(arxiu, goalId, testData.wrong).then(function(wrongResult) {
+        var correctPassed = correctResult.ok === true;
+        var wrongPassed   = wrongResult.ko === true;
+        return {
+          goalId: goalId,
+          arxiu: arxiu,
+          label: testData.label,
+          correctResult: correctResult,
+          wrongResult: wrongResult,
+          correctPassed: correctPassed,
+          wrongPassed: wrongPassed,
+          passed: correctPassed && wrongPassed
+        };
+      });
+    }).catch(function(err) {
       return {
         goalId: goalId, arxiu: arxiu,
         label: (testData && testData.label) || goalId,
@@ -687,7 +677,8 @@
         '&nbsp;&nbsp;1) una <strong>solució correcta</strong> → s\'espera el badge "<strong>✓ Correcte</strong>"<br>' +
         '&nbsp;&nbsp;2) una <strong>solució incorrecta</strong> → s\'espera el badge "<strong>✗ Incorrecte</strong>"<br>' +
         'Un test passa només si les dues simulacions donen el resultat esperat. ' +
-        'Cada test carrega la pàgina en un iframe ocult i pot trigar uns 5–15 segons.' +
+        'Cada test carrega la pàgina dos cops en iframes ocults (un per cada simulació) ' +
+        'i triga uns 10–20 segons.' +
       '</p>' +
 
       fileProtocolWarning +
