@@ -46,18 +46,17 @@
     'cap-2-ex': {
       // Inicial: A=(-3,0), B=(3,0), s=Segment(A,B) [fixats]
       label: 'Cap 2 — Punt mig de AB',
-      correct: ['M=Midpoint(A,B)'],            // → punt a (0,0) ✓
+      correct: ['M=PuntMig(A,B)'],             // → punt a (0,0) ✓
       wrong:   ['N=(1,1)']                     // → punt fora origen ✗
     },
     'cap-3-ex': {
       label: 'Cap 3 — Circumferència centre (0,0) radi 3',
-      correct: ['c=Circle((0,0),3)'],
-      wrong:   ['c=Circle((0,0),2)']           // radi incorrecte
+      correct: ['O=(0,0)', 'c=Cercle(O,3)'],
+      wrong:   ['O=(0,0)', 'c=Cercle(O,2)']    // radi incorrecte
     },
     'cap-4-ex': {
       // Inicial: A=(0,0), B=(4,0), C=(2,3), p=Polygon(A,B,C) [fixats]
-      // Validador busca un angle ≈ 56.31°.
-      // Triangle isòsceles: Angle a A = Angle a B = 56.31°, Angle a C = 67.38°.
+      // Triangle isòsceles: Angle a A = Angle a B = 56.31°.
       label: 'Cap 4 — Angle ≈ 56.31°',
       correct: ['alfa=Angle(B,A,C)'],          // angle a A = 56.31°
       wrong:   ['alfa=Angle(A,C,B)']           // angle a C = 67.38° (incorrecte)
@@ -65,26 +64,29 @@
     'cap-5-ex': {
       // Inicial: A=(-3,0), B=(3,0), s=Segment(A,B) [fixats]
       label: 'Cap 5 — Mediatriu de AB',
-      correct: ['m=PerpendicularBisector(A,B)'],
-      wrong:   ['m=Line(A,B)']                 // recta AB no perpendicular a si mateixa
+      correct: ['m=Mediatriu(A,B)'],
+      wrong:   ['m=Recta(A,B)']                // recta AB no és perpendicular a si mateixa
     },
     'cap-6-ex': {
       // Inicial: f=Line((0,0),(3,1)), P=(0,3) [fixats]
       label: 'Cap 6 — Paral·lela a f per P',
-      correct: ['g=Parallel(f,P)'],
+      correct: ['g=Paral·lela(f,P)'],
       wrong:   ['g=Perpendicular(P,f)']        // perpendicular, no paral·lela
     },
     'cap-7-ex': {
       label: 'Cap 7 — Hexàgon regular (6 costats)',
-      correct: ['Polygon((0,0),(1,0),6)'],     // hexàgon regular
-      wrong:   ['Polygon((0,0),(3,0),3)']      // triangle = 3 costats, no 6
+      correct: ['A=(0,0)', 'B=(1,0)', 'h=PolígonRegular(A,B,6)'],
+      wrong:   ['A=(0,0)', 'B=(3,0)', 't=PolígonRegular(A,B,3)']   // triangle = 3 costats
     },
     'cap-8-ex': {
       // Inicial: A=(1,1), B=(4,1), C=(2,4), t=Polygon(A,B,C), f=Line((0,-5),(0,5)) [fixats]
-      // f és l'eix Y; reflectir triangle ABC respecte f.
-      label: 'Cap 8 — Reflexió sobre eix Y',
-      correct: ['t2=Reflect(t,f)'],            // imatge: (-1,1), (-4,1), (-2,4) ✓
-      wrong:   ['t2=Rotate(t,180°,(0,0))']     // rotació, no reflexió → vèrtexs equivocats
+      // f és l'eix Y; reflectir t respecte f.
+      label: 'Cap 8 — Reflexió sobre l\'eix Y',
+      correct: ['t2=Reflexió(t,f)'],           // imatge: (-1,1), (-4,1), (-2,4) ✓
+      wrong: [                                 // crea un polígon a coordenades equivocades
+        'A2=(1,-1)', 'B2=(4,-1)', 'C2=(2,-4)',
+        't2=Polígon(A2,B2,C2)'
+      ]
     },
     'cap-9-ex': {
       // App graphing. Validador vol f(x)=2x+1 i un punt a (-0.5, 0).
@@ -94,8 +96,8 @@
     },
     'cap-10-ex': {
       label: 'Cap 10 — Lliscador + cercle dinàmic',
-      correct: ['a=Slider(1,5)', 'c=Circle((0,0),a)'],
-      wrong:   ['c=Circle((0,0),3)']           // sense lliscador
+      correct: ['a=Lliscador(1,5)', 'O=(0,0)', 'c=Cercle(O,a)'],
+      wrong:   ['O=(0,0)', 'c=Cercle(O,3)']    // sense lliscador
     },
 
 
@@ -103,7 +105,7 @@
 
     'repte-1': {
       label: 'Repte 1 — Triangle des de zero',
-      correct: ['A=(-2,-1)', 'B=(4,-1)', 'C=(1,4)', 't=Polygon(A,B,C)'],
+      correct: ['A=(-2,-1)', 'B=(4,-1)', 'C=(1,4)', 't=Polígon(A,B,C)'],
       wrong:   ['A=(-2,-1)', 'B=(4,-1)', 'C=(1,4)']   // punts sense polígon (cap segment)
     },
     'repte-2': {
@@ -113,68 +115,68 @@
     },
     'repte-3': {
       label: 'Repte 3 — Circumferències concèntriques r=2 i r=4',
-      correct: ['c=Circle((0,0),2)', 'd=Circle((0,0),4)'],
-      wrong:   ['c=Circle((0,0),2)']                       // només una circumferència
+      correct: ['O=(0,0)', 'c=Cercle(O,2)', 'd=Cercle(O,4)'],
+      wrong:   ['O=(0,0)', 'c=Cercle(O,2)']    // només una circumferència
     },
     'repte-4': {
       label: 'Repte 4 — Triangle amb àrea i angle',
       correct: [
         'A=(0,0)', 'B=(6,0)', 'C=(3,4)',
-        't=Polygon(A,B,C)',
-        'ar=Area(t)',                          // ≈ 12
+        't=Polígon(A,B,C)',
+        'ar=Àrea(t)',                          // ≈ 12
         'al=Angle(A,B,C)'                      // angle a B ≈ 53.13°
       ],
       wrong: [
         'A=(0,0)', 'B=(6,0)', 'C=(3,4)',
-        't=Polygon(A,B,C)'                     // sense àrea ni angle
+        't=Polígon(A,B,C)'                     // sense àrea ni angle
       ]
     },
     'repte-5': {
       label: 'Repte 5 — Quadrat a l\'origen, costat 3',
-      correct: ['Polygon((0,0),(3,0),4)'],      // quadrat regular de costat 3
-      wrong:   ['Polygon((0,0),(2,0),4)']       // quadrat de costat 2 (incorrecte)
+      correct: ['A=(0,0)', 'B=(3,0)', 'q=PolígonRegular(A,B,4)'],
+      wrong:   ['A=(0,0)', 'B=(2,0)', 'q=PolígonRegular(A,B,4)']    // costat 2 (incorrecte)
     },
     'repte-6': {
       // Inicial: A=(-4,-1), B=(4,3), s=Segment(A,B) [fixats]
       // Punt mig de AB = (0, 1) → ja és a l'eix Y.
       label: 'Repte 6 — Mediatriu i intersecció',
-      correct: ['m=PerpendicularBisector(A,B)', 'M=Midpoint(A,B)'],
-      wrong:   ['m=Line(A,B)']                  // recta AB, no mediatriu
+      correct: ['m=Mediatriu(A,B)', 'M=PuntMig(A,B)'],
+      wrong:   ['m=Recta(A,B)']                // recta AB, no mediatriu
     },
     'repte-7': {
       label: 'Repte 7 — Triangle equilàter',
-      correct: ['Polygon((0,0),(4,0),3)'],      // triangle regular = equilàter
-      wrong:   ['Polygon((0,0),(3,0),(1,2))']   // triangle escalè
+      correct: ['A=(0,0)', 'B=(4,0)', 'eq=PolígonRegular(A,B,3)'],
+      wrong:   ['A=(0,0)', 'B=(3,0)', 'C=(1,2)', 't=Polígon(A,B,C)']   // escalè
     },
     'repte-8': {
       // Inicial: f=Line((0,0),(4,1)), P=(3,4) [fixats]
       label: 'Repte 8 — Perpendicular i peu',
-      correct: ['g=Perpendicular(P,f)', 'F=Intersect(g,f)'],
-      wrong:   ['F=(0,0)']                      // cap perpendicular, peu equivocat
+      correct: ['g=Perpendicular(P,f)', 'F=Intersecció(g,f)'],
+      wrong:   ['F=(0,0)']                     // cap perpendicular, peu equivocat
     },
     'repte-9': {
       // Inicial: A=(0,0), B=(6,0), C=(2,5), t=Polygon(A,B,C) [fixats]
       label: 'Repte 9 — Circumcentre',
       correct: [
-        'm1=PerpendicularBisector(A,B)',
-        'm2=PerpendicularBisector(B,C)',
-        'D=Intersect(m1,m2)'                    // circumcentre = (3, 1.7)
+        'm1=Mediatriu(A,B)',
+        'm2=Mediatriu(B,C)',
+        'D=Intersecció(m1,m2)'                 // circumcentre ≈ (3, 1.7)
       ],
-      wrong: ['D=(2,2)']                         // punt qualsevol, no equidistant
+      wrong: ['D=(2,2)']                        // punt qualsevol, no equidistant
     },
     'repte-10': {
       // Rombus: costats iguals, sense angle de 90°.
-      // El wrong és un quadrat (90°): com el validador només detecta
-      // angles 90° si l'alumne en MESURA un, cal mesurar-lo també.
+      // Wrong = quadrat + angle 90° mesurat explícitament (el validador
+      // només detecta el cas "no és rombus" si hi ha un angle creat).
       label: 'Repte 10 — Rombus a l\'origen',
       correct: [
         'A=(0,0)', 'B=(3,0)', 'C=(4.5,2.598)', 'D=(1.5,2.598)',
-        'r=Polygon(A,B,C,D)'                    // rombus amb angle 60°/120°
+        'r=Polígon(A,B,C,D)'                   // rombus amb angle 60°/120°
       ],
       wrong: [
         'A=(0,0)', 'B=(3,0)', 'C=(3,3)', 'D=(0,3)',
-        'sq=Polygon(A,B,C,D)',                  // quadrat (costats iguals però angle 90°)
-        'alfa=Angle(D,A,B)'                     // mesura explícitament l'angle de 90°
+        'sq=Polígon(A,B,C,D)',                 // quadrat (4 costats iguals però angle 90°)
+        'alfa=Angle(D,A,B)'                    // mesura explícitament l'angle de 90°
       ]
     }
   };
@@ -226,28 +228,44 @@
     var resetBtn = wrapper.querySelector('.ggb-btn-reset');
     if (resetBtn) resetBtn.click();
 
-    return delay(200).then(function() {
-      // 2. Injecta cada comanda
-      (commands || []).forEach(function(cmd) {
-        if (!cmd) return;
-        try { api.evalCommand(cmd); }
-        catch (e) { console.warn('[debug-tester] evalCommand error:', cmd, e); }
-      });
-      return delay(200);
+    var failedCommands = [];
+
+    return delay(300).then(function() {
+      // 2. Injecta cada comanda seqüencialment, amb un petit delay
+      //    entre elles perquè GeoGebra processi les comandes complexes.
+      //    Capturem el retorn d'evalCommand: false significa que la
+      //    comanda no s'ha pogut parsejar (típicament nom desconegut).
+      return (commands || []).reduce(function(prev, cmd) {
+        return prev.then(function() {
+          if (!cmd) return;
+          var ok = true;
+          try {
+            ok = api.evalCommand(cmd);
+            if (ok === false) failedCommands.push(cmd);
+          } catch (e) {
+            failedCommands.push(cmd + ' [' + (e && e.message) + ']');
+            console.warn('[debug-tester] evalCommand error:', cmd, e);
+          }
+          return delay(80);    // dóna temps a GeoGebra a processar
+        });
+      }, Promise.resolve());
+    }).then(function() {
+      return delay(300);
     }).then(function() {
       // 3. Clica el botó Comprova
       var checkBtn = wrapper.querySelector('.ggb-btn-check');
       if (!checkBtn) throw new Error('Botó "Comprova" no trobat');
       checkBtn.click();
-      // El handler de Comprova té un setTimeout de 100ms; esperem 350ms
-      return delay(350);
+      // El handler de Comprova té un setTimeout de 100ms; esperem 400ms
+      return delay(400);
     }).then(function() {
       // 4. Llegeix el badge
       var badge = wrapper.querySelector('.ggb-badge');
       return {
         text: badge ? badge.textContent.trim() : '',
         ok:   !!(badge && badge.classList.contains('ggb-ok')),
-        ko:   !!(badge && badge.classList.contains('ggb-ko'))
+        ko:   !!(badge && badge.classList.contains('ggb-ko')),
+        failedCommands: failedCommands
       };
     });
   }
@@ -491,13 +509,23 @@
     var corr = result.correctResult || {};
     var wrng = result.wrongResult || {};
 
+    // Mostra comandes que han fallat (evalCommand → false): ajuda
+    // a diagnosticar problemes de sintaxi de GeoGebra.
+    function failedNote(r) {
+      if (!r.failedCommands || r.failedCommands.length === 0) return '';
+      return '<br><span class="ko">⚠ Comandes que GeoGebra ha rebutjat:</span> <code>' +
+             r.failedCommands.map(escapeHTML).join('</code>, <code>') + '</code>';
+    }
+
     detailEl.innerHTML =
-      'Sol·lució correcta → badge: <code>' + escapeHTML(corr.text || '?') + '</code> ' +
+      'Solució correcta → badge: <code>' + escapeHTML(corr.text || '?') + '</code> ' +
         '<span class="' + (result.correctPassed ? 'ok' : 'ko') + '">' +
-        (result.correctPassed ? '✓' : '✗ s\'esperava ✓ Correcte') + '</span><br>' +
-      'Sol·lució incorrecta → badge: <code>' + escapeHTML(wrng.text || '?') + '</code> ' +
+        (result.correctPassed ? '✓' : '✗ s\'esperava ✓ Correcte') + '</span>' +
+        failedNote(corr) + '<br>' +
+      'Solució incorrecta → badge: <code>' + escapeHTML(wrng.text || '?') + '</code> ' +
         '<span class="' + (result.wrongPassed ? 'ok' : 'ko') + '">' +
-        (result.wrongPassed ? '✓' : '✗ s\'esperava ✗ Incorrecte') + '</span>';
+        (result.wrongPassed ? '✓' : '✗ s\'esperava ✗ Incorrecte') + '</span>' +
+        failedNote(wrng);
   }
 
   /**
