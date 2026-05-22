@@ -33,13 +33,22 @@
 
 <script src="glossari-data.js"></script>
 <script src="capitols.js"></script>
+<!-- Mode debug: ?debug=1 → carrega el tester automàtic en lloc de la llista normal -->
+<script>
+  if (location.search.indexOf('debug=1') !== -1) {
+    document.write('<scr' + 'ipt src="debug-tester.js"></scr' + 'ipt>');
+  }
+</script>
 <script>
   injectCursLogo();
 
-  // Genera la llista de capítols i reptes
-  (function renderIndex() {
-    const list = document.getElementById('capitols-list');
-    if (!list) return;
+  // En mode debug, debug-tester.js substitueix el contingut: no rendritzem la llista normal.
+  if (location.search.indexOf('debug=1') === -1) {
+
+    // Genera la llista de capítols i reptes
+    (function renderIndex() {
+      const list = document.getElementById('capitols-list');
+      if (!list) return;
     const progress = getProgress();
 
     let html = '';
@@ -80,7 +89,9 @@
     }
 
     list.innerHTML = html;
-  })();
+    })();
+
+  }
 </script>
 
 </body>
